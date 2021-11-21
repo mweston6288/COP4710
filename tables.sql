@@ -35,7 +35,7 @@ create table if not exists request(
     profId integer not null,
     semester varchar(100) not null,
     ISBN integer not null,    
-    primary key (profId, ISBN, semester)
+    primary key (profId, ISBN, semester),
     foreign key (profId) references professor(profId),
     foreign key (ISBN) references book(ISBN)
 );
