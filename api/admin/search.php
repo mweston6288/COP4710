@@ -1,14 +1,21 @@
 <?php 
 
-  require_once 'dbLogin.php';
-  require_once 'httpPackage.php';
+  include '../dbLogin.php';
+  include '../httpPackage.php';
   
   // Establish conneciton to DB.
   $server = new Server();
   $conn = $server->connect();
 
+  // Get request data
+  $data = httpRequest();
+  $user = $data['search'];
+
+  $user = "%" . $user . "%";
+
   // Setup query
-  $stmt = $conn->prepare("SELECT * FROM admin");
+  $stmt = $conn->prepare("SELECT username FROM admin WHERE username LIKE ?");
+  $stmt->bind_param("s", $user);
   $execResult = $stmt->execute();
 
   if( false===$execResult ){
@@ -21,6 +28,7 @@
 
   while($row = $result->fetch_assoc()){
     array_push($searchResult, $row);
+    $searchCount++; 
   }
 
   if($searchCount == 0){
@@ -31,5 +39,4 @@
 
   $stmt->close();
   $conn->close();
-
 ?>

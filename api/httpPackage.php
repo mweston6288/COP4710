@@ -6,7 +6,7 @@
     }
 
     // Function sends and HTTP response in a JSON format
-    function httpReponse($arrayToSend)
+    function httpResponse($arrayToSend)
     {
         header('Content-type: application/json');
 		    echo json_encode($arrayToSend);

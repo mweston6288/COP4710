@@ -9,7 +9,7 @@
 
         function __construct()
         {
-            $this->hostname = '127.0.0.2:3306';
+            $this->hostname = 'cop4710_db_1';
             $this->username = 'root';
             $this->password = 'test';
             $this->database = 'db';
