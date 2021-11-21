@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  db:
+    image: mariadb:10.4.21
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+    - "./mysql:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+  www:
+    depends_on:
+    - db
+    image: php:7.4.25-apache
+    volumes:
+    - ".:/var/www/html"
+    ports:
+    - 80:80
+    - 443:443
