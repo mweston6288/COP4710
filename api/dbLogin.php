@@ -9,10 +9,10 @@
 
         function __construct()
         {
-            $this->hostname = 'localhost';
-            $this->username = 'backendSquad';
-            $this->password = 'password';
-            $this->database = 'cop4331_24';
+            $this->hostname = '127.0.0.2:3306';
+            $this->username = 'root';
+            $this->password = 'test';
+            $this->database = 'db';
         }
 
         // Creates and returns mysqli object
