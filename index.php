@@ -12,9 +12,12 @@ switch ($request) {
     case '/signup' :
         require __DIR__ . '/pages/signup.html';
         break;
+    case '/professor':
+      require __DIR__ . '/pages/professor.html';
+      break;
     default:
         http_response_code(404);
-        require __DIR__ . '/pages/professor.html';
+        require __DIR__ . '/pages/login.html';
         break;
 }
 
