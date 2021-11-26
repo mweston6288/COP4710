@@ -32,10 +32,11 @@ create table if not exists professor(
 );
 -- tracks each book request by each professor in each semester
 create table if not exists request(
+    requestId integer not null auto_increment,
     profId integer not null,
     semester varchar(100) not null,
     ISBN integer not null,    
-    primary key (profId, ISBN, semester),
+    primary key (requestId),
     foreign key (profId) references professor(profId),
     foreign key (ISBN) references book(ISBN)
 );
