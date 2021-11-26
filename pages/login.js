@@ -1,8 +1,16 @@
 var url = 'http://localhost:8000/api/login/';
 
-function handleLogin(){
+// Declare fields.
+var id;
+var username;
+var profName;
 
-	var username=document.getElementById("username").value;
+function handleLogin(){
+	id=0;
+	username="";
+	profName="";
+
+	var user=document.getElementById("username").value;
 	var password=document.getElementById("password").value;
 	var type=document.getElementById("type").value;
 	
@@ -11,9 +19,8 @@ function handleLogin(){
 	else{
 		url += "professorGet.php";
 	}
-	console.log(typeof url)
     // Prepare the values for HTTP request in JSON.
-    var payload = `{"username" : "${username}", "password" : "${password}"}`;
+    var payload = `{"username" : "${user}", "password" : "${password}"}`;
     var xhr = new XMLHttpRequest();
     // Create JSON HTTP Request destination.
     try{
@@ -22,7 +29,6 @@ function handleLogin(){
 	}catch (e){
 		console.error(e);
 	}
-	console.log(xhr);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 	
     try
@@ -37,13 +43,21 @@ function handleLogin(){
 			{
                 // Grab fields passed from HTTP Response body to local fields.
 				var jsonObject = JSON.parse(xhr.responseText);
-				console.log(jsonObject)
-
+				
                 // Change page to appropriate page.
-				if (type === "admin")
+				if (type === "admin"){
+					id = jsonObject.id;
+					username = jsonObject.username;
+					saveCookie()
 					window.location.href = "/admin";
-				else
+				}
+				else{
+					id = jsonObject.id;
+					username = jsonObject.username;
+					profName = jsonObject.name;
+					saveCookie()
 					window.location.href = "/professor";
+				}
 
 			}
             // If the response header is 400 Bad Request, signal user doesn't exist.
@@ -51,7 +65,6 @@ function handleLogin(){
             {
 
                 alert("Username or password does not exist!");
-				window.location.href = "/";
 
             }
 		};
@@ -61,4 +74,13 @@ function handleLogin(){
 	{
 		alert(err.message);
 	}
+}
+
+// Cookie holds onto user info and expires in 20 minutes.
+function saveCookie()
+{
+	var minutes = 20;
+	var date = new Date();
+	date.setTime(date.getTime() + (minutes*60*1000));	
+	document.cookie = "name=loginCookie, username=" + username + ",profName=" + profName + ",id=" + id + ";expires=" + date.toUTCString()+", SameSite=Lax";
 }
