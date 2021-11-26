@@ -17,7 +17,6 @@
     $preparedStatement->bind_param("ss", $username, $password);
     $preparedStatement->execute();
     $resultTable = $preparedStatement->get_result();
-    echo $query;
     // If the user row/table exists or not.
     if ($resultTable->num_rows > 0)
     {

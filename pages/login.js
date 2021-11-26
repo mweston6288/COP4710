@@ -1,23 +1,28 @@
-var pre = 'http://localhost:8000/';
-console.log(window.location.href);
+var url = 'http://localhost:8000/api/login/';
 
 function handleLogin(){
+
 	var username=document.getElementById("username").value;
 	var password=document.getElementById("password").value;
 	var type=document.getElementById("type").value;
 	
-	var url = pre + "api/login/";
 	if (type === "admin")
 		url += "adminGet.php";
 	else{
 		url += "professorGet.php";
 	}
+	console.log(typeof url)
     // Prepare the values for HTTP request in JSON.
     var payload = `{"username" : "${username}", "password" : "${password}"}`;
     var xhr = new XMLHttpRequest();
-	console.log(url);
     // Create JSON HTTP Request destination.
-    xhr.open("POST", url, true);
+    try{
+
+		xhr.open("POST", url, true);
+	}catch (e){
+		console.error(e);
+	}
+	console.log(xhr);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 	
     try
@@ -32,7 +37,7 @@ function handleLogin(){
 			{
                 // Grab fields passed from HTTP Response body to local fields.
 				var jsonObject = JSON.parse(xhr.responseText);
-
+				console.log(jsonObject)
 
                 // Change page to appropriate page.
 				if (type === "admin")
@@ -50,7 +55,6 @@ function handleLogin(){
 
             }
 		};
-
 		xhr.send(payload);
 	}
 	catch (err)
