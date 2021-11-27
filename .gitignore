@@ -1,1 +1,4 @@
 /db.php
+cgi-bin/phpinfo.cgi
+cgi-bin/perlinfo.pl
+.DS_Store
