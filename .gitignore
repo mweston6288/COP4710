@@ -1,1 +1,8 @@
 /db.php
+cgi-bin/phpinfo.cgi
+cgi-bin/perlinfo.pl
+.DS_Store
+composer.json
+composer.lock
+composer.phar
+/vendor

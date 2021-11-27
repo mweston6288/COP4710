@@ -9,9 +9,9 @@
 
         function __construct()
         {
-            $this->hostname = 'cop4710_db_1';
+            $this->hostname = 'localhost';
             $this->username = 'root';
-            $this->password = 'test';
+            $this->password = 'mysql';
             $this->database = 'db';
         }
 
