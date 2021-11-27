@@ -1,6 +1,6 @@
 <?php
-    require_once '../dbLogin.php';
-    require_once '../httpPackage.php';
+    require_once './utility/dbLogin.php';
+    require_once './utility/httpPackage.php';
 
     // Connect to database.
     $server = new Server();
@@ -12,24 +12,31 @@
     $password = $data['password'];
 
     // Prepared statement (security) to retrieve row.
-    $query = "SELECT profId, username, name FROM professor WHERE username = ? AND password = ?;";
+    $query = "SELECT * FROM users WHERE username = ? AND password = ?";
     $preparedStatement = $conn->prepare($query);
     $preparedStatement->bind_param("ss", $username, $password);
     $preparedStatement->execute();
     $resultTable = $preparedStatement->get_result();
+    
     // If the user row/table exists or not.
     if ($resultTable->num_rows > 0)
     {
         // Create JSON of existing row.
         $row = $resultTable->fetch_assoc();
-        $id = $row['profId'];
+        $id = $row['id'];
         $username = $row['username'];
-		$name = $row['name'];
+        $password = $row['password'];
+        $firstName = $row['first_name'];
+        $lastName = $row['last_name'];
+
         $user = array(
             'id' => $id,
             'username' => $username,
-			'name' => $name
+            'password' => $password,
+            'first_name' => $firstName,
+            'last_name' => $lastName
         );
+
         // Return status code 200 and JSON of this existing user row/object.
         ok();
         header("Content-Type: application/json");
