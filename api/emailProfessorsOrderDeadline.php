@@ -1,6 +1,7 @@
 <?php
     require_once './utility/dbLogin.php';
     require_once './utility/httpPackage.php';
+    require_once './utility/phpMailer.php';
 
     // Connect to database.
     $server = new Server();
@@ -16,16 +17,29 @@
     $resultTable = $preparedStatement->get_result();
 
     // Iterate through all the professor emails and append to the emails array.
-    $emails = array();
+    $professors = array();
     for ($i = 0; $i < $resultTable->num_rows; $i++)
     {
         $row = $resultTable->fetch_assoc();
         $email = $row['email'];
+        $name = $row['name'];
+        $professor = array(
+            'email' => $email,
+            'name' => $name
+        );
 
-        array_push($emails, $email);
+        array_push($professors, $professor);
     }
 
-    
+    // Send email to all professors.
+    if (sendEmail($professors, "test", "my testssss"))
+    {
+        echo "success";
+    }
+    else
+    {
+        echo "fail";
+    }
     
     // Close the database at end of script
     $preparedStatement->close();
