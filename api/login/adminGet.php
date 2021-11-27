@@ -12,10 +12,14 @@
     $password = $data['password'];
 
     // Prepared statement (security) to retrieve row.
-    $query = "SELECT adminId, username FROM admin WHERE username = ? AND password = ?;";
-    $preparedStatement = $conn->prepare($query);
-    $preparedStatement->bind_param("ss", $username, $password);
-    $preparedStatement->execute();
+    $query = "SELECT adminId, username FROM admin WHERE username=? AND password=?;";
+    if($preparedStatement = $conn->prepare($query)){
+      $preparedStatement->bind_param("ss", $username, $password);
+      $preparedStatement->execute();
+    } else {
+      $error = $conn->errno . ' ' . $conn->error;
+      echo $error; // 1054 Unknown column 'foo' in 'field list'
+    }
     $resultTable = $preparedStatement->get_result();
     // If the user row/table exists or not.
     if ($resultTable->num_rows > 0)

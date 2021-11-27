@@ -1,5 +1,3 @@
-var url = 'http://localhost:8000/api/login/';
-
 // Declare fields.
 var id;
 var username;
@@ -10,15 +8,18 @@ function handleLogin(){
 	username="";
 	profName="";
 
-	var user=document.getElementById("username").value;
+  var user=document.getElementById("username").value;
 	var password=document.getElementById("password").value;
 	var type=document.getElementById("type").value;
-	
+
+  var url = 'http://localhost:8000/api/login/';
+  
 	if (type === "admin")
 		url += "adminGet.php";
 	else{
 		url += "professorGet.php";
 	}
+
     // Prepare the values for HTTP request in JSON.
     var payload = `{"username" : "${user}", "password" : "${password}"}`;
     var xhr = new XMLHttpRequest();
@@ -42,6 +43,7 @@ function handleLogin(){
 			if (this.readyState == 4 && this.status == 200) 
 			{
                 // Grab fields passed from HTTP Response body to local fields.
+        console.log(xhr.responseText);
 				var jsonObject = JSON.parse(xhr.responseText);
 				
                 // Change page to appropriate page.
