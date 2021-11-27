@@ -28,7 +28,7 @@
         $password = $row['password'];
 
         $user = array(
-            'id' => $id,
+            'adminID' => $id,
             'username' => $username,
             'password' => $password
         );

@@ -8,32 +8,16 @@
 
     // Retrieve the data from the HTTP Request body.
     $data = httpRequest();
-    $username = $data['username'];
-    $password = $data['password'];
+    $adminID = $data['adminID'];
             
-    // Query for a table to see if the user/pass already exists.
-    $query = "SELECT * FROM admin WHERE username = ? AND password = ?";
+    // Delete the contact with the selected id.
+    $query = "DELETE FROM admin WHERE adminId = ?";
     $preparedStatement = $conn->prepare($query);
-    $preparedStatement->bind_param("ss", $username, $password);
+    $preparedStatement->bind_param("i", $adminID);
     $preparedStatement->execute();
-    $resultTable = $preparedStatement->get_result();
 
-    // If the user doesn't exist, insert into to table successfully.
-    if ($resultTable->num_rows < 1)
-    {
-        $query = "INSERT INTO admin(username, password) VALUES(?, ?)";
-        $preparedStatement = $conn->prepare($query);
-        $preparedStatement->bind_param("ss", $username, $password);
-        $preparedStatement->execute();
-
-        // Returns HTTP header 201 CREATED
-        created();
-    }
-    // Otherwise return HTTP header 400 BAD REQUEST as user already exists.
-    else 
-    {
-        badRequest();
-    }
+    // Return with 204 NO CONTENT HTTP header for successful deletion.
+    noContent();
     
     // Close the database at end of script
     $preparedStatement->close();
