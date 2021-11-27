@@ -5,7 +5,7 @@ services:
     volumes:
     - "./mysql:/var/lib/mysql"
     - "./mysql/mysql.log:/var/log/mysql/general-log.log"
-    - "./samples/tables.sql:/root/tables.sql"
+    - "./tables.sql:/root/tables.sql"
     environment:
       MYSQL_ROOT_PASSWORD: test
     ports:
@@ -19,5 +19,5 @@ services:
     environment:
      PMA_HOST: db
     ports:
-    - 80:80
+    - 8000:80
     - 443:443
