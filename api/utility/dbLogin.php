@@ -11,7 +11,7 @@
         {
             $this->hostname = 'localhost';
             $this->username = 'root';
-            $this->password = 'password';
+            $this->password = 'mysql';
             $this->database = 'db';
         }
 

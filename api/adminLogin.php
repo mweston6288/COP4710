@@ -12,7 +12,7 @@
     $password = $data['password'];
 
     // Prepared statement (security) to retrieve row.
-    $query = "SELECT * FROM users WHERE username = ? AND password = ?";
+    $query = "SELECT * FROM admin WHERE username = ? AND password = ?";
     $preparedStatement = $conn->prepare($query);
     $preparedStatement->bind_param("ss", $username, $password);
     $preparedStatement->execute();
@@ -23,18 +23,14 @@
     {
         // Create JSON of existing row.
         $row = $resultTable->fetch_assoc();
-        $id = $row['id'];
+        $id = $row['adminId'];
         $username = $row['username'];
         $password = $row['password'];
-        $firstName = $row['first_name'];
-        $lastName = $row['last_name'];
 
         $user = array(
             'id' => $id,
             'username' => $username,
-            'password' => $password,
-            'first_name' => $firstName,
-            'last_name' => $lastName
+            'password' => $password
         );
 
         // Return status code 200 and JSON of this existing user row/object.
