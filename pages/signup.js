@@ -3,30 +3,31 @@ var id;
 var username;
 var profName;
 
-function handleLogin(){
+function attemptRegister(){
 	id=0;
 	username="";
 	profName="";
 
-  var user=document.getElementById("username").value;
+  	var user=document.getElementById("username").value;
 	var password=document.getElementById("password").value;
-	var type=document.getElementById("type").value;
+	var confirm=document.getElementById("confirm").value;
 
-  var url = 'http://localhost:8000/api/login/';
+	var url = 'http://localhost:8000/api/signup/profSignup.php';
   
-	if (type === "admin")
-		url += "adminLogin.php";
-	else{
-		url += "professorLogin.php";
+	if (password !== confirm){
+		document.getElementById("error").innerHTML = "passwords do not match"
+		return;
 	}
 
+
+	const params = new URLSearchParams(window.location.search);
     // Prepare the values for HTTP request in JSON.
-    var payload = `{"username" : "${user}", "password" : "${password}"}`;
+    var payload = `{"username" : "${user}", "password" : "${password}", "id" : "${params.get("id")}"}`;
     var xhr = new XMLHttpRequest();
     // Create JSON HTTP Request destination.
     try{
 
-		xhr.open("POST", url, true);
+		xhr.open("PUT", url, true);
 	}catch (e){
 		console.error(e);
 	}
@@ -43,30 +44,23 @@ function handleLogin(){
 			if (this.readyState == 4 && this.status == 200) 
 			{
                 // Grab fields passed from HTTP Response body to local fields.
-        console.log(xhr.responseText);
 				var jsonObject = JSON.parse(xhr.responseText);
 				
                 // Change page to appropriate page.
-				if (type === "admin"){
-					id = jsonObject.id;
-					username = jsonObject.username;
-					saveCookie()
-					window.location.href = "/admin";
-				}
-				else{
-					id = jsonObject.id;
-					username = jsonObject.username;
-					profName = jsonObject.name;
-					saveCookie()
-					window.location.href = "/professor";
-				}
+
+				id = jsonObject.id;
+				username = jsonObject.username;
+				profName = jsonObject.name;
+				saveCookie()
+				window.location.href = "/professor";
+
 
 			}
             // If the response header is 400 Bad Request, signal user doesn't exist.
             else if (this.readyState == 4 && this.status == 400)
             {
 
-                alert("Username or password does not exist!");
+                alert("Account already exists!");
 
             }
 		};

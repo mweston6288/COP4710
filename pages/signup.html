@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
+    <script type="text/javascript" src="/pages/signup.js"></script>
     <body>
-        <form>
+
             <label>username</label><br/>
-            <input type="text"><br/>
+            <input id="username" type="text"><br/>
             <label>password</label><br/>
-            <input type="password"><br/>
+            <input id="password"type="password"><br/>
             <label>retype password</label><br/>
-            <input type="password"><br/>            
-            <button>login</button>
-        </form>
+            <input id="confirm" type="password"><br/>            
+            <button onclick="attemptRegister()">create account</button>
+            <p id = "error"></p>
     </body>
 </html>

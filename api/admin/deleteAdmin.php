@@ -1,6 +1,6 @@
 <?php
-    require_once './utility/dbLogin.php';
-    require_once './utility/httpPackage.php';
+    require_once '../utility/dbLogin.php';
+    require_once '../utility/httpPackage.php';
 
     // Connect to database.
     $server = new Server();
