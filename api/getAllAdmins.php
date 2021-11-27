@@ -35,7 +35,7 @@
         'count' => count($admins)
     );
 
-    // Return status code 200 and JSON of the contacts for this user.
+    // Return status code 200 and JSON of the admins.
     ok();
     header("Content-Type: application/json");
     httpResponse($data);

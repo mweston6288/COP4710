@@ -18,7 +18,7 @@
     $preparedStatement->execute();
     $resultTable = $preparedStatement->get_result();
     
-    // If the user row/table exists or not.
+    // If the user row/table exists.
     if ($resultTable->num_rows > 0)
     {
         // Create JSON of existing row.
