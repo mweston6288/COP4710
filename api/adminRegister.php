@@ -21,7 +21,7 @@
     // If the user doesn't exist, insert into to table successfully.
     if ($resultTable->num_rows < 1)
     {
-        $query = "INSERT INTO users(username, password) VALUES(?, ?)";
+        $query = "INSERT INTO admin(username, password) VALUES(?, ?)";
         $preparedStatement = $conn->prepare($query);
         $preparedStatement->bind_param("ss", $username, $password);
         $preparedStatement->execute();
