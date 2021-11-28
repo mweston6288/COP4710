@@ -1,5 +1,16 @@
 # COP4710
-
+# dbLoginData
+This application requires a file called dbLogiData.php.
+In api/utility, make the file and insert the following code:
+```php
+<?php
+	$hostname="host";
+	$username="user";
+	$password="password";
+	$database="db";
+?>
+```
+replace each value with the necessary values needed to access you mysql database.
 # Admin API
 ## Get All Admins
 Gets usernames for all admins in db.
