@@ -1,4 +1,5 @@
 /db.php
+/api/utility/dbLoginData.php
 cgi-bin/phpinfo.cgi
 cgi-bin/perlinfo.pl
 .DS_Store

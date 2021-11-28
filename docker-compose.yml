@@ -7,7 +7,7 @@ services:
     - "./mysql/mysql.log:/var/log/mysql/general-log.log"
     - "./tables.sql:/root/tables.sql"
     environment:
-      MYSQL_ROOT_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: password
     ports:
     - 3306:3306
   www:
