@@ -43,7 +43,6 @@ function handleLogin(){
 			if (this.readyState == 4 && this.status == 200) 
 			{
                 // Grab fields passed from HTTP Response body to local fields.
-        console.log(xhr.responseText);
 				var jsonObject = JSON.parse(xhr.responseText);
 				
                 // Change page to appropriate page.
@@ -84,5 +83,5 @@ function saveCookie()
 	var minutes = 20;
 	var date = new Date();
 	date.setTime(date.getTime() + (minutes*60*1000));	
-	document.cookie = "name=loginCookie, username=" + username + ",profName=" + profName + ",id=" + id + ";expires=" + date.toUTCString()+", SameSite=Lax";
+	document.cookie = "name=loginCookie,id=" + id + ",username=" + username + ",profName=" + encodeURIComponent(profName) + ",expires=" + date.toUTCString()+",SameSite=Lax";
 }
