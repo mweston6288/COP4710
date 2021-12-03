@@ -1,18 +1,57 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link rel="stylesheet" href="admin.css">
+  </head>
     <body>
-        <select>
-            <option>Create admin</option>
-            <option>Delete Admin</option>
-            <option>Send Email</option>
-        </select>
- 
-
-        <div id="professors">
+        <div>
+          <button id="getAdmins" onclick="getAdmins()">Get Admins</button>
+          <button id="addAdmin" onclick="openModal('addAdminModal')">Add Admin</button>
           <button id="getProfessors" onclick="getProfessors()">Get Professors</button>
-          <table id="professorTable">
+          <button id="addProfessors" onclick="openModal('addProfModal')">Add Professor</button>
+        </div>
+
+        <div>
+          <table id="table">
 
           </table>
+        </div>
+
+        <!--MODAL-->
+        <div id="addProfModal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Add A Professor</h2>
+              <span= class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+              <form id="addProfForm">
+                <label for="name">Professor Name</label>
+                <input id="name"/>
+                <label for="email">Professor Email</label>
+                <input id="email"/>
+                <button id="submitProf">Add a Professor</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div id="addAdminModal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Add an Admin</h2>
+              <span= class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+              <form id="addAdminForm">
+                <label for="username">Admin Username</label>
+                <input id="username"/>
+                <label for="password">Admin Password</label>
+                <input id="password"/>
+                <button id="submitAdmin">Add Admin</button>
+              </form>
+            </div>
+          </div>
         </div>
         
         
