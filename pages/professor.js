@@ -1,5 +1,6 @@
 function newForm(){
-	document.getElementById("form").hidden = !(document.getElementById("form").hidden);
+	document.getElementById("requests").innerHTML="";
+	document.getElementById("form").hidden = false;
 	var profId = getCookie();
 
 	var url = 'http://localhost:8000/api/professor/eraseForm.php';
@@ -45,11 +46,12 @@ function newForm(){
 		alert(err.message);
 	}
 }
-function showForm(){
-	document.getElementById("form").hidden = !(document.getElementById("form").hidden);
-	var profId = getCookie();
+function getRequests(){
+	document.getElementById("form").hidden = false;
 
-	var url = 'http://localhost:8000/api/professor/geRequests.php';
+
+  var url = 'http://localhost:8000/api/professor/getRequest.php';
+  var profId = getCookie();
 
     // Prepare the values for HTTP request in JSON.
     var payload = `{"profId" : "${profId}"}`;
@@ -57,7 +59,7 @@ function showForm(){
     // Create JSON HTTP Request destination.
     try{
 
-		xhr.open("GET", url, true);
+		xhr.open("POST", url, true);
 	}catch (e){
 		console.error(e);
 	}
@@ -73,15 +75,47 @@ function showForm(){
             // and the status code of the HTTP Response for this Request is 200 OK.
 			if (this.readyState == 4 && this.status == 200) 
 			{
-                
-                alert("Request form has been reset!");
+                var list = document.getElementById("requests");
+				list.innerHTML="";
+				// Grab fields passed from HTTP Response body to local fields.
+				var jsonObject = JSON.parse(xhr.responseText);
+				console.log(jsonObject);
+				jsonObject.map(function f(object){
+					var child = document.createElement('div');
+					child.id = object.requestId;
+					child.innerHTML=
+					`
+					<ul>
+					<li>
+					Title: ${object.bookTitle}
+					</li>
+					<li>
+					Authors: ${object.author}
+					</li>
+					<li>
+					Edition: ${object.edition}
+					</li>
+					<li>
+					Publisher: ${object.publisher}
+					</li>
+					<li>
+					ISBN: ${object.ISBN}
+					</li>
+					<li>
+					Semester: ${object.semester}
+					</li>
+					</ul>
+					<button onClick="deleteBook()">Remove from list</button>
+					`
+					list.appendChild(child);
+				})
 
 			}
             // If the response header is 400 Bad Request, signal user doesn't exist.
             else if (this.readyState == 4 && this.status == 400)
             {
 
-                alert("An error has occurred!");
+                alert("Nothing to display");
 
             }
 		};
@@ -90,6 +124,7 @@ function showForm(){
 	catch (err)
 	{
 		alert(err.message);
+
 	}
 }
 
@@ -136,6 +171,7 @@ function submit (){
 		body: JSON.stringify(payload)
 	  }).then(function(res){
 		  console.log(res);
+		  getRequests();
 	  })
 
 
