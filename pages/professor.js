@@ -85,28 +85,28 @@ function getRequests(){
 					child.id = object.requestId;
 					child.innerHTML=
 					`
-					<ul>
-					<li>
+					<div>
+					<param>
 					Title: ${object.bookTitle}
-					</li>
-					<li>
+					</param><br/>
+					<param>
 					Authors: ${object.author}
-					</li>
-					<li>
+					</param><br/>
+					<param>
 					Edition: ${object.edition}
-					</li>
-					<li>
+					</param><br/>
+					<param>
 					Publisher: ${object.publisher}
-					</li>
-					<li>
+					</param><br/>
+					<param id="ISBN${object.requestId}" value="${object.ISBN}">
 					ISBN: ${object.ISBN}
-					</li>
-					<li>
+					</param><br/>
+					<param id="semester${object.requestId}" value="${object.semester}">
 					Semester: ${object.semester}
-					</li>
-					</ul>
-					<button onClick="deleteBook()">Remove from list</button>
-					`
+					</param><br/>
+					</div>
+					<button onClick="deleteBook(this.parentElement)" value="${child.id}">Remove from list</button>
+					<br/><br/>`
 					list.appendChild(child);
 				})
 
@@ -138,6 +138,53 @@ function getCookie(){
     return decodeURIComponent(cookiePair[1]);
 
 }
+
+function deleteBook(parent){
+	var profId = getCookie();
+	var semester = document.getElementById(`semester${parent.id}`).value;
+	var ISBN = document.getElementById(`ISBN${parent.id}`).value;
+	var url = 'http://localhost:8000/api/professor/eraseRequest.php';
+
+    // Prepare the values for HTTP request in JSON.
+    var payload = `{"profId" : "${profId}", "semester":"${semester}","ISBN":"${ISBN}"}`;
+    var xhr = new XMLHttpRequest();
+    // Create JSON HTTP Request destination.
+    try{
+
+		xhr.open("DELETE", url, true);
+	}catch (e){
+		console.error(e);
+	}
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	
+    try
+	{
+		// This event fires anytime the readstate changes (opening HTTP Request, sending HTTP Request, etc).
+		xhr.onreadystatechange = function() 
+		{
+
+			// If the ready state so happens to be 4 (4 = request finished, response is ready), 
+            // and the status code of the HTTP Response for this Request is 200 OK.
+			if (this.readyState == 4 && this.status == 200) 
+			{
+                
+                parent.remove();
+
+			}
+            // If the response header is 400 Bad Request, signal user doesn't exist.
+            else if (this.readyState == 4 && this.status == 400)
+            {
+
+                alert("An error has occurred!");
+
+            }
+		};
+		xhr.send(payload);
+	}
+	catch (err)
+	{
+		alert(err.message);
+	}}
 
 function submit (){
 

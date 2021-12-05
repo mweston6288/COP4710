@@ -85,3 +85,45 @@ function saveCookie()
 	date.setTime(date.getTime() + (minutes*60*1000));	
 	document.cookie = "name=loginCookie,id=" + id + ",username=" + username + ",profName=" + encodeURIComponent(profName) + ",expires=" + date.toUTCString()+",SameSite=Lax";
 }
+
+function showPasswordReset(){
+	document.getElementById("forgot").innerHTML = `
+	<div>
+    <label> Your name
+    <input type = "text" id= "name">
+    </label>
+    </div>
+	<div>
+    <label> Your email
+    <input type = "text" id= "profEmail">
+    </label>
+    </div>
+	<button type= "submit" onclick = "passwordChange()">  Submit</button>
+	`
+}
+function passwordChange(){
+
+		var name=document.getElementById("name").value;
+		var email=document.getElementById("email").value;
+	  
+	  
+	  
+		  var url = 'http://localhost:8000/api/professor/changeProfPassword.php'
+	  
+		  var payload = {};
+		  payload.name = name;
+	  	payload.email = email;
+		  fetch(url, {
+			  method: "POST",
+			  mode: "same-origin",
+			  credentials: "same-origin",
+			  headers: {
+				"Content-Type": "application/json"
+			  },
+			  body: JSON.stringify(payload)
+			}).then(function(res){
+				console.log(res);
+				getRequests();
+			})
+
+}
