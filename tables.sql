@@ -42,5 +42,11 @@ create table if not exists request(
     foreign key (profId) references professor(profId),
     foreign key (ISBN) references book(ISBN)
 );
+-- tracks the current semester
+create table if not exists currentSemester(
+    semester varchar(100) not null,
+    year integer not null,
+);
 -- default entries
 insert into admin(username, password) values ("admin", "password");
+insert into currentSemester(semester, year) values ("Spring", 2022);
