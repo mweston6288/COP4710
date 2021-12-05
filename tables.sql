@@ -42,5 +42,9 @@ create table if not exists request(
     foreign key (profId) references professor(profId),
     foreign key (ISBN) references book(ISBN)
 );
+create table if not exists reminder(
+    reminder date,
+    primary key(reminder)
+);
 -- default entries
 insert into admin(username, password) values ("admin", "password");
