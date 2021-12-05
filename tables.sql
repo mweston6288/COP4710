@@ -71,4 +71,3 @@ INSERT into request(profId, isbn, semester) values(3, 312, "Fall 2021");
 INSERT into request(profId, isbn, semester) values(3, 12312, "Fall 2021");
 INSERT into request(profId, isbn, semester) values(3, 12312, "Spring 2022");
 INSERT into request(profId, isbn, semester) values(3, 312, "Spring 2022");
-
