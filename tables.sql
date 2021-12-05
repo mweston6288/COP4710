@@ -51,6 +51,7 @@ create table if not exists reminder(
     reminder date,
     primary key(reminder)
 );
+
 -- default entries
 insert into admin(username, password) values ("admin", "password");
 insert into currentSemester(semester, year) values ("Spring", 2022);
