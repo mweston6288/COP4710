@@ -32,13 +32,23 @@
     }
 
     // Send email to all professors.
-    if (sendEmail($professors, "test", "my testssss"))
+    $emailSubject = "Submit book requests by " . $deadlineDate . "!";
+    $emailContent = <<<_END
+        <p>This is a reminder to all faculty to <strong>submit book requests by the given deadline</strong> of $deadlineDate.</p>
+        <p><br></p>
+        <p>Thank you,</p>
+        <p>COP4710 Bookstore</p>
+        _END;
+
+    if (sendEmail($professors, $emailSubject, $emailContent))
     {
-        echo "success";
+        // Successful request 200 OK
+        ok();
     }
     else
     {
-        echo "fail";
+        // Unsuccessful request 400 bad request
+        badRequest();
     }
     
     // Close the database at end of script
