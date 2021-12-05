@@ -1,13 +1,12 @@
 <?php
-$hostname = "localhost";
-$username = "root";
-$password = "password";
-// Create connection
-$conn = mysqli_connect($hostname, $username, $password);
+    require_once './api/utility/dbLogin.php';
 
+// Create connection
+$server = new Server();
+$conn = $server->connect();
 // Check connection
 if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
+  die("Connection failed: ");
 }
 
 $request = $_SERVER['REQUEST_URI'];
@@ -24,7 +23,16 @@ switch ($request) {
     break;
   default:
     if(preg_match($regex, $request)){
-      require __DIR__ . '/pages/signup.html';
+      $query = "SELECT * FROM professor WHERE profId = ? AND username IS NULL;";
+      $preparedStatement = $conn->prepare($query);
+      $preparedStatement->bind_param("i", $_GET['id']);
+      $preparedStatement->execute();
+      $resultTable = $preparedStatement->get_result();
+      if ($resultTable->num_rows > 0){
+        require __DIR__ . '/pages/signup.html';
+        break;
+      }
+      require __DIR__ . '/pages/login.html';
       break;
     }
     http_response_code(404);
