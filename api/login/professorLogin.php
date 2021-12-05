@@ -11,7 +11,7 @@
     $username = $data['username'];
     $password = $data['password'];
 
-    // Prepared statement (security) to retrieve row.
+    // Prepared statement to check if professor exists.
     $query = "SELECT profId, username, name FROM professor WHERE username = ? AND password = ?;";
     $preparedStatement = $conn->prepare($query);
     $preparedStatement->bind_param("ss", $username, $password);

@@ -12,15 +12,16 @@
     $password = $data['password'];
 	$id = $data['id'];
 
-    // Prepared statement (security) to retrieve row.
+    // Update the professor with a username and password.
     $query = "UPDATE professor SET username= ?, password = ? WHERE profId = ?;";
     $preparedStatement = $conn->prepare($query);
     $preparedStatement->bind_param("ssi", $username, $password, $id);
     $preparedStatement->execute();
-    // If the user row/table exists or not.
+    // If no issues return professor.
     if ($preparedStatement->errno == 0)
     {
-		$newQuery = "SELECT profId, username, name FROM professor WHERE username = ?;";
+		// get professor info and send it back
+        $newQuery = "SELECT profId, username, name FROM professor WHERE username = ?;";
 		$stmt = $conn->prepare($newQuery);
 		$stmt->bind_param("s", $username);
 		$stmt->execute();

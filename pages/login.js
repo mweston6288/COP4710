@@ -3,17 +3,18 @@ var id;
 var username;
 var profName;
 
+// handle login process
 function handleLogin(){
 	id=0;
 	username="";
 	profName="";
 
-  var user=document.getElementById("username").value;
+	var user=document.getElementById("username").value;
 	var password=document.getElementById("password").value;
 	var type=document.getElementById("type").value;
 
-  var url = 'http://localhost:8000/api/login/';
-  
+	var url = 'http://localhost:8000/api/login/';
+	// make php url based on if an admin or professor is logging in
 	if (type === "admin")
 		url += "adminLogin.php";
 	else{
@@ -45,7 +46,7 @@ function handleLogin(){
                 // Grab fields passed from HTTP Response body to local fields.
 				var jsonObject = JSON.parse(xhr.responseText);
 				
-                // Change page to appropriate page.
+                // Change page to appropriate page and make login cookie.
 				if (type === "admin"){
 					id = jsonObject.id;
 					username = jsonObject.username;
@@ -85,12 +86,12 @@ function saveCookie()
 	date.setTime(date.getTime() + (minutes*60*1000));	
 	document.cookie = "name=loginCookie,id=" + id + ",username=" + username + ",profName=" + encodeURIComponent(profName) + ",expires=" + date.toUTCString()+",SameSite=Lax";
 }
-
+// if professor forgot their email, show this form so they can request a change
 function showPasswordReset(){
 	document.getElementById("forgot").innerHTML = `
 	<div>
-    <label> Your name
-    <input type = "text" id= "name">
+    <label> username
+    <input type = "text" id= "username">
     </label>
     </div>
 	<div>
@@ -101,29 +102,27 @@ function showPasswordReset(){
 	<button type= "submit" onclick = "passwordChange()">  Submit</button>
 	`
 }
+// change password on request
 function passwordChange(){
+	// password change is not manual. Professor must confirm username and email first.
+	var username=document.getElementById("name").value;
+	var email=document.getElementById("email").value;	  
+	var url = 'http://localhost:8000/api/professor/changeProfPassword.php'
 
-		var name=document.getElementById("name").value;
-		var email=document.getElementById("email").value;
-	  
-	  
-	  
-		  var url = 'http://localhost:8000/api/professor/changeProfPassword.php'
-	  
-		  var payload = {};
-		  payload.name = name;
-	  	payload.email = email;
-		  fetch(url, {
-			  method: "POST",
-			  mode: "same-origin",
-			  credentials: "same-origin",
-			  headers: {
-				"Content-Type": "application/json"
-			  },
-			  body: JSON.stringify(payload)
-			}).then(function(res){
-				console.log(res);
-				getRequests();
-			})
+	var payload = {};
+	payload.username = username;
+	payload.email = email;
+	fetch(url, {
+		method: "POST",
+		mode: "same-origin",
+		credentials: "same-origin",
+		headers: {
+		"Content-Type": "application/json"
+		},
+		body: JSON.stringify(payload)
+	}).then(function(res){
+		console.log(res);
+		getRequests();
+	})
 
 }

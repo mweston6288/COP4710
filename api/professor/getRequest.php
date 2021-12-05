@@ -10,33 +10,31 @@
     $data = httpRequest();
 	$profId = $data['profId'];
 
-    // Prepared statement (security) to retrieve row.
+    // Retrieve all professor requests from request joined with their matching data in book.
     $query = "SELECT request.requestId, request.semester, book.ISBN, book.bookTitle, book.author, book.edition, book.publisher FROM request LEFT JOIN book ON request.ISBN = book.ISBN WHERE request.profId = ?";
   	$preparedStatement = $conn->prepare($query);
     $preparedStatement->bind_param("i", $profId);
     $preparedStatement->execute();
 
     $resultTable = $preparedStatement->get_result();
-    // If the user row/table exists or not.
+    // If anything exists.
     if ($resultTable->num_rows > 0)
     {
 		$request = array();
-        // Create JSON of existing row.
+        // Create JSON of existing rows.
         while($row = $resultTable->fetch_assoc()){
 			$request[]=$row;
 		}
 
-        // Return status code 200 and JSON of this existing user row/object.
+        // Return status code 200 and JSON of all entries.
         ok();
         header("Content-Type: application/json");
         httpResponse($request);
     }
-    // Otherwise, user doesn't exist. Return status code 400 BAD REQUEST. 
+    // Otherwise, professor has no requests. Return status code 400 BAD REQUEST. 
     else 
     {
         badRequest();
-		httpResponse($data);
-
     }   
     
     // Close the database at end of script

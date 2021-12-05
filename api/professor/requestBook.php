@@ -8,11 +8,6 @@
 
     // Retrieve the data from the HTTP Request body.
     $_POST = httpRequest();
-    if($_POST == null){
-        noContent();
-		header("Content-Type: application/json");
-        httpResponse($_POST);        
-    }
     $profId = $_POST['profId'];
 	$ISBN = $_POST['ISBN'];
 	$semester = $_POST['semester'];
@@ -21,19 +16,20 @@
 	$edition = $_POST['edition'];
 	$publisher = $_POST['publisher'];
 
-    // Prepared statement (security) to retrieve row.
+    // First insert the requested book into the book database. No concern if it fails
     $query = "INSERT INTO book (bookTitle, author, edition, publisher, ISBN) VALUES (?,?,?,?,?)";
     $preparedStatement = $conn->prepare($query);
     $preparedStatement->bind_param("ssdsi", $bookTitle, $author, $edition, $publisher, $ISBN);
     $preparedStatement->execute();
-	// Return status code 200 and JSON of this existing user row/object.
+	// Next, save a request of the book
 	$insertQuery = "INSERT INTO request(profId, ISBN, semester) VALUES (?,?,?)";
 	$insertstmt = $conn->prepare($insertQuery);
 	$insertstmt->bind_param("iis", $profId, $ISBN, $semester);
 	$insertstmt->execute();
-    // If the user row/table exists or not.
+    // If no errors occurred.
     if ($insertstmt->errno == 0)
     {	
+        // get all currently existing requests and send them back
 		$newQuery = "SELECT request.requestId, request.semester, book.ISBN, book.bookTitle, book.author, book.edition, book.publisher FROM request LEFT JOIN book ON request.ISBN = book.ISBN WHERE request.profId = ?";
 		$stmt = $conn->prepare($newQuery);
 		$stmt->bind_param("i", $profId);
@@ -41,24 +37,16 @@
 
 		$resultTable = $stmt->get_result();
         
-		$row = $resultTable->fetch_assoc();
-		$ISBN = $row['ISBN'];
-		$semester = $row['semester'];
-		$bookTitle = $row['bookTitle'];
-		$author = $row['author'];
-		$edition = $row['edition'];
-		$publisher = $row['publisher'];
-		$requestId = $row['requestId'];
-        // Create JSON of existing row.
-        $request = array(
-			'requestId'=>$requestId,
-			'ISBN'=>$ISBN,
-			'semester'=>$semester,
-			'bookTitle'=>$bookTitle,
-			'author'=>$author,
-			'edition'=>$edition,
-			'publisher'=>$publisher,
-        );
+		$request = array();
+        // Create JSON of existing rows.
+        while($row = $resultTable->fetch_assoc()){
+			$request[]=$row;
+		}
+
+        // Return status code 200 and JSON of all entries.
+        ok();
+        header("Content-Type: application/json");
+        httpResponse($request);
         // Return status code 200 and JSON of this existing user row/object.
         ok();
         header("Content-Type: application/json");

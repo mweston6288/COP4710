@@ -10,18 +10,18 @@
     $data = httpRequest();
     $profId = $data['profId'];
 
-    // Prepared statement (security) to retrieve row.
+    // delet all requests for a given professor.
     $query = "DELETE FROM request WHERE profId = ?;";
     $preparedStatement = $conn->prepare($query);
     $preparedStatement->bind_param("i", $profId);
     $preparedStatement->execute();
-    // If the user row/table exists or not.
+    // Check if any errors occur.
     if ($preparedStatement->errno == 0)
     {
-        // Return status code 200 and JSON of this existing user row/object.
+        // Return status code 200.
         ok();
     }
-    // Otherwise, user doesn't exist. Return status code 400 BAD REQUEST. 
+    // Otherwise, professor has no entries. Return status code 400 BAD REQUEST. 
     else 
     {
         badRequest();

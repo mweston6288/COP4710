@@ -12,18 +12,18 @@
 	$ISBN = $data['ISBN'];
 	$semester = $data['semester'];
 
-    // Prepared statement (security) to retrieve row.
+    // Get specific request entry.
     $query = "DELETE FROM request WHERE profId = ? AND ISBN = ? AND semester = ?;";
     $preparedStatement = $conn->prepare($query);
     $preparedStatement->bind_param("iis", $profId, $ISBN, $semester);
     $preparedStatement->execute();
-    // If the user row/table exists or not.
+    // If an element was deleted.
     if ($preparedStatement->errno == 0)
     {
-        // Return status code 200 and JSON of this existing user row/object.
+        // Return status code 200.
         ok();
     }
-    // Otherwise, user doesn't exist. Return status code 400 BAD REQUEST. 
+    // Otherwise, return status code 400 BAD REQUEST. 
     else 
     {
         badRequest();
