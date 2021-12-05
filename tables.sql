@@ -1,4 +1,4 @@
--- When opening mysql from terminal, run "mysql -u root -p < [path to tables.sql]", 
+-- When opening mysql from terminal, run "mysql -u root -p < [path to tables.sql]",
 
 create database if not exists db;
 use db;
@@ -20,7 +20,7 @@ create table if not exists book(
 );
 
 create table if not exists professor(
-    profId integer not null auto_increment,    
+    profId integer not null auto_increment,
     email varchar(100) not null unique,
     name varchar(100) not null,
     username varchar(100) default '',-- can be blank, blank triggers account creation
@@ -47,6 +47,10 @@ create table if not exists currentSemester(
     year integer not null
 );
 
+create table if not exists reminder(
+    reminder date,
+    primary key(reminder)
+);
 -- default entries
 insert into admin(username, password) values ("admin", "password");
 insert into currentSemester(semester, year) values ("Spring", 2022);

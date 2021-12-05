@@ -3,6 +3,7 @@ var id;
 var username;
 var profName;
 
+// create an account
 function attemptRegister(){
 	id=0;
 	username="";
@@ -13,13 +14,13 @@ function attemptRegister(){
 	var confirm=document.getElementById("confirm").value;
 
 	var url = 'http://localhost:8000/api/signup/profSignup.php';
-  
+	// do not continue if password fields do not match
 	if (password !== confirm){
 		document.getElementById("error").innerHTML = "passwords do not match"
 		return;
 	}
 
-
+	// profId is in the url param field
 	const params = new URLSearchParams(window.location.search);
     // Prepare the values for HTTP request in JSON.
     var payload = `{"username" : "${user}", "password" : "${password}", "id" : "${params.get("id")}"}`;
@@ -47,7 +48,6 @@ function attemptRegister(){
 				var jsonObject = JSON.parse(xhr.responseText);
 				
                 // Change page to appropriate page.
-
 				id = jsonObject.id;
 				username = jsonObject.username;
 				profName = jsonObject.name;
@@ -56,7 +56,7 @@ function attemptRegister(){
 
 
 			}
-            // If the response header is 400 Bad Request, signal user doesn't exist.
+            // If the response header is 400 Bad Request, signal user exists.
             else if (this.readyState == 4 && this.status == 400)
             {
 
@@ -78,5 +78,5 @@ function saveCookie()
 	var minutes = 20;
 	var date = new Date();
 	date.setTime(date.getTime() + (minutes*60*1000));	
-	document.cookie = "name=loginCookie, username=" + username + ",profName=" + profName + ",id=" + id + ";expires=" + date.toUTCString()+", SameSite=Lax";
+	document.cookie = "name=loginCookie,id=" + id + ",username=" + username + ",profName=" + encodeURIComponent(profName) + ",expires=" + date.toUTCString()+",SameSite=Lax";
 }

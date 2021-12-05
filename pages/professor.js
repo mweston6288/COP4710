@@ -1,3 +1,4 @@
+// create a new request form
 function newForm(){
 	document.getElementById("requests").innerHTML="";
 	document.getElementById("form").hidden = false;
@@ -46,12 +47,13 @@ function newForm(){
 		alert(err.message);
 	}
 }
+// get existing requests
 function getRequests(){
 	document.getElementById("form").hidden = false;
 
 
-  var url = 'http://localhost:8000/api/professor/getRequest.php';
-  var profId = getCookie();
+	var url = 'http://localhost:8000/api/professor/getRequest.php';
+	var profId = getCookie();
 
     // Prepare the values for HTTP request in JSON.
     var payload = `{"profId" : "${profId}"}`;
@@ -75,11 +77,13 @@ function getRequests(){
             // and the status code of the HTTP Response for this Request is 200 OK.
 			if (this.readyState == 4 && this.status == 200) 
 			{
-                var list = document.getElementById("requests");
+                
+				var list = document.getElementById("requests");
 				list.innerHTML="";
 				// Grab fields passed from HTTP Response body to local fields.
 				var jsonObject = JSON.parse(xhr.responseText);
-				console.log(jsonObject);
+				
+				// build a list for each item returned
 				jsonObject.map(function f(object){
 					var child = document.createElement('div');
 					child.id = object.requestId;
@@ -127,7 +131,8 @@ function getRequests(){
 
 	}
 }
-
+// get the profId from the cookie. Due to how the cookie is set up,
+// cookieArr[i] is guaranteed to read 'id=<profId>' and cookiePair is the id number
 function getCookie(){
 	// Split cookie string
     var cookieArr = document.cookie.split(",");
@@ -138,7 +143,8 @@ function getCookie(){
     return decodeURIComponent(cookiePair[1]);
 
 }
-
+// delete a single requested book from the request list
+// parent is the parent div of the delete button of each request
 function deleteBook(parent){
 	var profId = getCookie();
 	var semester = document.getElementById(`semester${parent.id}`).value;
@@ -167,7 +173,7 @@ function deleteBook(parent){
             // and the status code of the HTTP Response for this Request is 200 OK.
 			if (this.readyState == 4 && this.status == 200) 
 			{
-                
+                // remove the parent and all children it had
                 parent.remove();
 
 			}
@@ -184,13 +190,10 @@ function deleteBook(parent){
 	catch (err)
 	{
 		alert(err.message);
-	}}
-
+	}
+}
+// submit a book request
 function submit (){
-
-
-
-
 	var bookTitle = document.getElementById ("bookTitle").value
 	var ISBN = document.getElementById ("ISBN").value
 	var Semester = document.getElementById ("Semester").value
@@ -202,12 +205,14 @@ function submit (){
 
 	var payload = {};
 	payload.profId = profId;
-	payload.ISBN = ISBN, 
-	payload.semester= Semester, 
-	payload.bookTitle= bookTitle, 
-	payload.author= author,
-	payload.edition= Edition,
-	payload.publisher= Publisher
+	payload.ISBN = ISBN;
+	payload.semester= Semester; 
+	payload.bookTitle= bookTitle; 
+	payload.author= author;
+	payload.edition= Edition;
+	payload.publisher= Publisher;
+
+	// due to the size of the payload, we have to use the fetch API rather than XMLHttpRequest
 	fetch(url, {
 		method: "POST",
 		mode: "same-origin",
@@ -217,9 +222,7 @@ function submit (){
 		},
 		body: JSON.stringify(payload)
 	  }).then(function(res){
-		  console.log(res);
-		  getRequests();
+		// after submitting, get all current requested items
+		getRequests();
 	  })
-
-
 }

@@ -11,7 +11,7 @@
     $username = $data['username'];
     $password = $data['password'];
 
-    // Prepared statement (security) to retrieve row.
+    // Prepared statement to check if credentials for admin are correct
     $query = "SELECT adminId, username FROM admin WHERE username=? AND password=?;";
     if($preparedStatement = $conn->prepare($query)){
       $preparedStatement->bind_param("ss", $username, $password);

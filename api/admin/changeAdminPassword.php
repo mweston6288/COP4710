@@ -17,7 +17,7 @@
     $preparedStatement->bind_param("si", $newPassword, $adminID);
     $preparedStatement->execute();
 
-    // Return with 204 NO CONTENT HTTP header for successful deletion.
+    // Return with 204 NO CONTENT HTTP header for successful edit.
     noContent();
     
     // Close the database at end of script
