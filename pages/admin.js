@@ -489,12 +489,16 @@ function getFinalRequests() {
 
 }
 
+var id = -1;
+
 function loadBooks(profId){
+  if(profId == id) return;
+  
   var semester = document.getElementById("selectSemester").value;
 
   var payload = JSON.stringify({semester, profId});
 
-  var url = urlBase + professorsBase + "getBookRequests" + extension;
+  var url = urlBase + professorsBase + "getBookRequestsForSemester" + extension;
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
@@ -515,7 +519,7 @@ function loadBooks(profId){
         
         // Generate Table
         generateTableHead(table, "books");
-        response.requests.forEach(element => {
+        response.books.forEach(element => {
           let row = table.insertRow(); // Create Row
           let cell = row.insertCell(); // Create first cell
           let text = document.createTextNode(element.isbm); // Assign isbn
