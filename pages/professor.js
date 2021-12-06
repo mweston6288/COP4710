@@ -259,9 +259,10 @@ function resetPassword(){
 
 			// If the ready state so happens to be 4 (4 = request finished, response is ready), 
             // and the status code of the HTTP Response for this Request is 200 OK.
-			if (this.readyState == 4 && this.status == 200) 
+			if (this.readyState == 4 && this.status == 204) 
 			{
-                // remove the parent and all children it had
+				// hide reset Password field and alert user of success
+				document.getElementById("resetPassword").hidden = false;
                 alert("Password was changed")
 
 			}
