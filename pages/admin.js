@@ -150,10 +150,11 @@ function addProfessor() {
     xhr.onreadystatechange = function () {
 
       if(this.readyState == 4 && this.status == 201){
+        var jsonObject = JSON.parse(xhr.responseText);
         // Reset form
         document.getElementById("name").value = "";
         document.getElementById("email").value = "";
-        sendInviteEmail()
+        sendInviteEmail(jsonObject.createdId);
         // Close modal
         closeModal();
       }else if(this.readyState == 4 && this.status == 400){
@@ -172,7 +173,7 @@ function addProfessor() {
 
 
 function sendInviteEmail(profId){
-  var payload = `{"profId" : "4"}`;
+  var payload = `{"profId" : "${profId}"}`;
 
   // Connection info
   var url = urlBase + adminBase + "emailProfessorInvitation" + extension;
