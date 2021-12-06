@@ -445,6 +445,15 @@ function getAllBookRequests() {
           cell = row.insertCell();
           text = document.createTextNode(element.bookAmount);
           cell.appendChild(text);
+
+          cell = row.insertCell();
+          text = document.createElement("input");
+          text.type = "button";
+          text.value = "View";
+          text.onclick = function(){
+            loadBooks(element.profId);
+          };
+          cell.appendChild(text);
         });
       }
     }
@@ -453,7 +462,6 @@ function getAllBookRequests() {
   }catch(e){
     console.log(e.message);
   }
-
 }
 
 function getFinalRequests() {
@@ -481,6 +489,68 @@ function getFinalRequests() {
 
 }
 
+function loadBooks(profId){
+  var semester = document.getElementById("selectSemester").value;
+
+  var payload = JSON.stringify({semester, profId});
+
+  var url = urlBase + professorsBase + "getBookRequests" + extension;
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try{
+    xhr.onreadystatechange = function() {
+      if(this.readyState == 4 && this.status == 200){
+        var response = JSON.parse(this.responseText);
+
+        // Generate table with response.
+        var table = document.getElementById("books");
+        // Clear table
+        var rowCount = table.rows.length;
+				for(var i = 0; i < rowCount; i++)
+				{
+					table.deleteRow(0);
+				}
+        
+        // Generate Table
+        generateTableHead(table, "books");
+        response.requests.forEach(element => {
+          let row = table.insertRow(); // Create Row
+          let cell = row.insertCell(); // Create first cell
+          let text = document.createTextNode(element.isbm); // Assign isbn
+          cell.appendChild(text); // ADD isbn
+
+          // Add professorID
+          cell = row.insertCell();
+          text = document.createTextNode(element.bookTitle);
+          cell.appendChild(text);
+
+          // Add number of books
+          cell = row.insertCell();
+          text = document.createTextNode(element.author);
+          cell.appendChild(text);
+
+          // Add number of books
+          cell = row.insertCell();
+          text = document.createTextNode(element.edition);
+          cell.appendChild(text);
+
+          // Add number of books
+          cell = row.insertCell();
+          text = document.createTextNode(element.publisher);
+          cell.appendChild(text);
+        });
+      }
+    }
+
+    xhr.send(payload);
+  }catch(e){
+    console.log(e.message);
+  }
+
+}
+
 
 // Table Generation
 function generateTableHead(table, name) {
@@ -497,6 +567,10 @@ function generateTableHead(table, name) {
       break;
     case 'request':
       data = ["Professor", "ID", "Books"];
+      break;
+    case 'books':
+      data = ["ISBN", "Title", "Author", "Edition", "Publisher"];
+      break;
   }
 
 	for (let i = 0; i < data.length; i++) {
