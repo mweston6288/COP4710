@@ -321,6 +321,41 @@ function addAdmin() {
   }
 
 }
+document.getElementById("submitReminder").addEventListener("click", function(event){
+  event.preventDefault();
+  addReminder();
+})
+
+function addReminder(){
+  // Establish endpoint url we will call.
+  var url = urlBase + adminBase + "emailProfessorsOrderDeadline" + extension;
+  var date = document.getElementById("date").value;
+  console.log(date);
+  // Start request
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  var payload = `{"deadlineDate": "${date}"}`
+  try{
+
+    // Establish state changes for html request.
+    xhr.onreadystatechange = function(){
+      // All went well.
+      if(this.readyState == 4 && this.status == 200){
+
+        alert("Reminder sent");
+  
+      }else if(xhr.readyState == 4 && xhr.status == 500){ // Something is wrong
+        console.log("An error has occured");
+      }
+    }
+
+    // Send Request
+    xhr.send(payload);
+  }catch(err){
+    console.log(err.message);
+  }
+}
 
 // Modal STUFF
 var span = document.getElementsByClassName("close")[0];
