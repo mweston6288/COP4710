@@ -6,10 +6,16 @@
     <body>
         <div>
           <button id="getAdmins" onclick="getAdmins()">Get Admins</button>
-          <button id="addAdmin" onclick="openModal('addAdminModal')">Add Admin</button>
           <button id="getProfessors" onclick="getProfessors()">Get Professors</button>
+        </div>
+
+        <div class="specific-buttons" id="professorButtons">
           <button id="addProfessors" onclick="openModal('addProfModal')">Add Professor</button>
           <button id="setReminder" onclick="openModal('setReminderModal')">Set Reminder</button>
+        </div>
+
+        <div class="specific-buttons" id="adminButtons">
+          <button id="addAdmin" onclick="openModal('addAdminModal')">Add Admin</button>
         </div>
 
         <div>
@@ -70,6 +76,7 @@
             </div>
           </div>
         </div>
+        <script type="text/javascript" src="/pages/adminREquests.js"></script>
         <script type="text/javascript" src="/pages/admin.js"></script>
     </body>
 </html>

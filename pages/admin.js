@@ -4,12 +4,19 @@ var professorsBase = "professor/";
 var extension = ".php";
 var modal; // declare modal to be used anywhere in file.
 
+var professorButtons = document.getElementById("professorButtons");
+var adminButtons = document.getElementById("adminButtons");
+
 document.getElementById('getProfessors').onclick = function(){
   getProfessors()
 };
 
 // Populates professors table on admin page.
 function getProfessors(){
+  // Set styling
+  professorButtons.style.display = "inline";
+  adminButtons.style.display = "none";
+
   console.log("Getting Professors..");
   // Establish endpoint url we will call.
   var url = urlBase + adminBase + "getAllProfessors" + extension;
@@ -40,7 +47,7 @@ function getProfessors(){
 				}
         
         // Generate Table
-        generateTableHead(table);
+        generateTableHead(table, false);
         response.professors.forEach(element => {
           let row = table.insertRow(); // Create Row
           let cell = row.insertCell(); // Create first cell
@@ -174,11 +181,16 @@ function addProfessor() {
 
 // --------------- Admin stuff
 function getAdmins(){
+  // Set styling
+  professorButtons.style.display = "none";
+  adminButtons.style.display = "inline";
+  
   console.log("Getting Professors..");
   // Establish endpoint url we will call.
   var url = urlBase + adminBase + "getAllAdmins" + extension;
 
   console.log(url);
+
   // Start request
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
@@ -204,7 +216,7 @@ function getAdmins(){
 				}
         
         // Generate Table
-        generateTableHead(table);
+        generateTableHead(table, true);
         response.admins.forEach(element => {
           let row = table.insertRow(); // Create Row
           let cell = row.insertCell(); // Create first cell
