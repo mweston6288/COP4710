@@ -7,7 +7,7 @@
         <div>
           <button id="getAdmins" onclick="getAdmins()">Get Admins</button>
           <button id="getProfessors" onclick="getProfessors()">Get Professors</button>
-          <button id="getAllBookRequests" onclick="getAllBookRequests()">Get Book Requests</button>
+          <button id="getAllBookRequests" onclick="loadBookRequests()">Get Book Requests</button>
         </div>
 
         <div class="specific-buttons" id="professorButtons">
@@ -20,6 +20,9 @@
         </div>
 
         <div class="specific-buttons" id="requestButtons">
+          <label for="selectSemester">Semester:</label>
+          <select id="selectSemester">
+          </select>
           <button id="getFinalRequests" onclick="getFinalRequests()">Finalize Requests</button>
         </div>
 

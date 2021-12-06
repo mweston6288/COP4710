@@ -50,7 +50,7 @@ function getProfessors(){
 				}
         
         // Generate Table
-        generateTableHead(table, false);
+        generateTableHead(table, "professor");
         response.professors.forEach(element => {
           let row = table.insertRow(); // Create Row
           let cell = row.insertCell(); // Create first cell
@@ -239,7 +239,7 @@ function getAdmins(){
 				}
         
         // Generate Table
-        generateTableHead(table, true);
+        generateTableHead(table, "admin");
         response.admins.forEach(element => {
           let row = table.insertRow(); // Create Row
           let cell = row.insertCell(); // Create first cell
@@ -364,13 +364,49 @@ document.getElementById("submitReminder").addEventListener("click", function(eve
 })
 
 // --------------- Request stuff ---------------
-function getAllBookRequests() {
+var select = document.getElementById("selectSemester");
+select.addEventListener("change", function(event){
+  event.preventDefault();
+  getAllBookRequests(select.value);
+})
+
+function loadBookRequests() {
   // Set styling
   professorButtons.style.display = "none";
   adminButtons.style.display = "none";
   requestButtons.style.display = "inline";
 
-  var semester = "Fall 2021";
+  var select = document.getElementById("selectSemester");
+
+  var url = urlBase + adminBase + "getAllExistingSemesters" + extension;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try{
+    xhr.onreadystatechange = function() {
+      if(this.readyState == 4 && this.status == 200){
+        var response = JSON.parse(this.responseText);
+
+        response.semesters.forEach((element) => {
+          var option = document.createElement("option");
+          option.value = element;
+          option.text = element;
+
+          select.add(option);
+        })
+      }
+    }
+
+    xhr.send(null);
+  }catch(e){
+    console.log(e.message);
+  }
+}
+
+function getAllBookRequests() {
+  var semester = document.getElementById("selectSemester").value;
+
   var payload = JSON.stringify({semester});
 
   var url = urlBase + adminBase + "getAllBookRequestsForSemester" + extension;
@@ -383,7 +419,33 @@ function getAllBookRequests() {
       if(this.readyState == 4 && this.status == 200){
         var response = JSON.parse(this.responseText);
 
-        console.log(response);
+        // Generate table with response.
+        var table = document.getElementById("table");
+        // Clear table
+        var rowCount = table.rows.length;
+				for(var i = 0; i < rowCount; i++)
+				{
+					table.deleteRow(0);
+				}
+        
+        // Generate Table
+        generateTableHead(table, "request");
+        response.requests.forEach(element => {
+          let row = table.insertRow(); // Create Row
+          let cell = row.insertCell(); // Create first cell
+          let text = document.createTextNode(element.name); // Assign name
+          cell.appendChild(text); // ADD name
+
+          // Add professorID
+          cell = row.insertCell();
+          text = document.createTextNode(element.profId);
+          cell.appendChild(text);
+
+          // Add number of books
+          cell = row.insertCell();
+          text = document.createTextNode(element.bookAmount);
+          cell.appendChild(text);
+        });
       }
     }
 
@@ -421,10 +483,22 @@ function getFinalRequests() {
 
 
 // Table Generation
-function generateTableHead(table, admin) {
+function generateTableHead(table, name) {
 	let thead = table.createTHead();
 	let row = thead.insertRow();
-	let data = (admin) ? ["ID","Username","Password"] : ["ID", "Name", "Email"];
+	let data;
+  
+  switch(name){
+    case 'admin':
+      data = ["ID","Username","Password"];
+      break;
+    case 'professor':
+      data = ["ID", "Name", "Email"];
+      break;
+    case 'request':
+      data = ["Professor", "ID", "Books"];
+  }
+
 	for (let i = 0; i < data.length; i++) {
 		let th = document.createElement("th");
 		let text = document.createTextNode(data[i]);
