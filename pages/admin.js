@@ -358,6 +358,52 @@ function addAdmin() {
   }
 
 }
+
+document.getElementById("changePassword").addEventListener("click", function(event){
+  event.preventDefault();
+  changePassword();
+})
+
+function changePassword(){
+  var adminId = getCookie();
+  var newPassword=document.getElementById("newPassword").value;
+  var confirmPassword=document.getElementById("confirmPassword").value;
+
+  if(newPassword !== confirmPassword){
+    alert("Password fields do not match");
+    return;
+  }
+  var payload = `{"adminId": "${adminId}", "newPassword" : "${newPassword}"}`;
+  // Connection info
+  var url = urlBase + adminBase + "changeAdminPassword" + extension;
+  var xhr = new XMLHttpRequest();
+  xhr.open("PUT", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try{
+    xhr.onreadystatechange = function () {
+
+      if(this.readyState == 4 && this.status == 204){
+        // Reset form
+        document.getElementById("newPassword").value = "";
+        document.getElementById("confirmPassword").value = "";
+        alert("Password changed successfully")
+        // Close modal
+        closeModal();
+      }else if(this.readyState == 4 && this.status == 400){
+
+        //TODO: Add error message to modal.
+        console.log("An error occurred");
+      }
+    }
+
+    xhr.send(payload)
+  }catch(e){
+    console.log(e.message);
+  }
+
+}
+
 document.getElementById("submitReminder").addEventListener("click", function(event){
   event.preventDefault();
   addReminder();
@@ -602,4 +648,17 @@ window.onclick = function(event) {
   if(event.target == modal){
     closeModal();
   }
+}
+
+// get the adminId from the cookie. Due to how the cookie is set up,
+// cookieArr[i] is guaranteed to read 'id=<adminId>' and cookiePair is the id number
+function getCookie(){
+	// Split cookie string
+    var cookieArr = document.cookie.split(",");
+    // Get the second element which is the id
+    var cookiePair = cookieArr[1].split("=");
+        
+	// return id value
+    return decodeURIComponent(cookiePair[1]);
+
 }

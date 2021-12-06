@@ -12,7 +12,7 @@
 	$username = $data['username'];
 	$email = $data['email'];
 	$str=substr(md5(rand()),0,6);
-	// Change admin password with given id.
+	// Change professor password with given id.
 	$query = "UPDATE professor SET password = ? WHERE email = ? AND username IS NOT NULL AND username = ?";
 	$preparedStatement = $conn->prepare($query);
 	$preparedStatement->bind_param("sss", $str, $email, $username);

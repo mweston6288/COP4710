@@ -8,6 +8,7 @@
           <button id="getAdmins" onclick="getAdmins()">Get Admins</button>
           <button id="getProfessors" onclick="getProfessors()">Get Professors</button>
           <button id="getAllBookRequests" onclick="loadBookRequests()">Get Book Requests</button>
+          <button id="resetPassword" onclick="openModal('resetPasswordModal')">Reset Password</button>
         </div>
 
         <div class="specific-buttons" id="professorButtons">
@@ -71,7 +72,25 @@
             </div>
           </div>
         </div>
-        
+
+        <div id="resetPasswordModal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Reset Password</h2>
+              <span onclick="closeModal()" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+              <form id="addAdminForm">
+                <label for="newPassword">New Password</label>
+                <input id="newPassword"/>
+                <label for="confirmPassword">Confirm Password</label>
+                <input id="confirmPassword"/>
+                <button id="changePassword">Reset</button>
+              </form>
+            </div>
+          </div>
+        </div>   
+
         <div id="setReminderModal" class="modal">
           <div class="modal-content">
             <div class="modal-header">
@@ -82,7 +101,7 @@
               <form id="reminderForm">
                 <label for="time">Reminder Date</label>
                 <input type="date" id="date"/>
-                <button id="submitReminder">Add a Reminder</button>
+                <button id="submitReminder">Send a Reminder</button>
               </form>
             </div>
           </div>
