@@ -88,10 +88,10 @@ function saveCookie()
 }
 // if professor forgot their email, show this form so they can request a change
 function showPasswordReset(){
-	document.getElementById("forgot").innerHTML = `
+	document.getElementById("reset").innerHTML = `
 	<div>
     <label> username
-    <input type = "text" id= "username">
+    <input type = "text" id= "user">
     </label>
     </div>
 	<div>
@@ -99,30 +99,53 @@ function showPasswordReset(){
     <input type = "text" id= "profEmail">
     </label>
     </div>
-	<button type= "submit" onclick = "passwordChange()">  Submit</button>
+	<button onclick="passwordChange()">  Submit</button>
 	`
 }
 // change password on request
 function passwordChange(){
 	// password change is not manual. Professor must confirm username and email first.
-	var username=document.getElementById("name").value;
-	var email=document.getElementById("email").value;	  
-	var url = 'http://localhost:8000/api/professor/changeProfPassword.php'
+	var username=document.getElementById("user").value;
+	var email=document.getElementById("profEmail").value;	  
+	var url = 'http://localhost:8000/api/login/requestNewPassword.php'
 
-	var payload = {};
-	payload.username = username;
-	payload.email = email;
-	fetch(url, {
-		method: "POST",
-		mode: "same-origin",
-		credentials: "same-origin",
-		headers: {
-		"Content-Type": "application/json"
-		},
-		body: JSON.stringify(payload)
-	}).then(function(res){
-		console.log(res);
-		getRequests();
-	})
+    // Prepare the values for HTTP request in JSON.
+    var payload = `{"username" : "${username}", "email" : "${email}"}`;
+    var xhr = new XMLHttpRequest();
+    // Create JSON HTTP Request destination.
+    try{
 
+		xhr.open("POST", url, true);
+	}catch (e){
+		console.error(e);
+	}
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	
+    try
+	{
+		// This event fires anytime the readstate changes (opening HTTP Request, sending HTTP Request, etc).
+		xhr.onreadystatechange = function() 
+		{
+
+				
+			// If the ready state so happens to be 4 (4 = request finished, response is ready), 
+            // and the status code of the HTTP Response for this Request is 200 OK.
+			if (this.readyState == 4 && this.status == 204) 
+			{
+                alert("Check your email for a new password");
+			}
+            // If the response header is 400 Bad Request, signal user doesn't exist.
+            else if (this.readyState == 4 && this.status == 400)
+            {
+
+                alert("Username or email is incorrect");
+
+            }
+		};
+		xhr.send(payload);
+	}
+	catch (err)
+	{
+		alert(err.message);
+	}
 }
