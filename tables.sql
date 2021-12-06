@@ -23,8 +23,8 @@ create table if not exists professor(
     profId integer not null auto_increment,
     email varchar(100) not null unique,
     name varchar(100) not null,
-    username varchar(100) default '',-- can be blank, blank triggers account creation
-    password varchar(100) default '',
+    username varchar(100) unique,-- can be blank, blank triggers account creation
+    password varchar(100) unique,
     primary key(profId)
 );
 
