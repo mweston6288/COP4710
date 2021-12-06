@@ -55,24 +55,3 @@ create table if not exists reminder(
 -- default entries
 insert into admin(username, password) values ("admin", "password");
 insert into currentSemester(semester, year) values ("Spring", 2022);
-
--- test data
-INSERT into professor(email, name) values("danreplay3@gmail.com", "danny");
-INSERT into professor(email, name) values("test@gmail.com", "Jacob");
-INSERT into professor(email, name) values("randomEmail@gmail.com", "Dr. Bacon");
-
-INSERT into book(ISBN, bookTitle, author, edition, publisher) values(1111, "The cat in the hat", "dr. seuss", 1, "some publisher");
-INSERT into book(ISBN, bookTitle, author, edition, publisher) values(1112, "The book about nothing", "samuel nothing", 1, "some publisher");
-INSERT into book(ISBN, bookTitle, author, edition, publisher) values(12312, "Coding for dummies", "for dummies guy", 1, "some publisher");
-INSERT into book(ISBN, bookTitle, author, edition, publisher) values(312, "The key to happiness", "dr. success", 1, "some publisher");
-
-INSERT into request(profId, isbn, semester) values(1, 12312, "Summer 2021");
-INSERT into request(profId, isbn, semester) values(1, 312, "Summer 2021");
-INSERT into request(profId, isbn, semester) values(1, 1111, "Fall 2021");
-INSERT into request(profId, isbn, semester) values(1, 1112, "Fall 2021");
-INSERT into request(profId, isbn, semester) values(1, 312, "Fall 2021");
-INSERT into request(profId, isbn, semester) values(2, 1112, "Fall 2021");
-INSERT into request(profId, isbn, semester) values(3, 312, "Fall 2021");
-INSERT into request(profId, isbn, semester) values(3, 12312, "Fall 2021");
-INSERT into request(profId, isbn, semester) values(3, 12312, "Spring 2022");
-INSERT into request(profId, isbn, semester) values(3, 312, "Spring 2022");
