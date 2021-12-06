@@ -24,7 +24,7 @@ create table if not exists professor(
     email varchar(100) not null unique,
     name varchar(100) not null,
     username varchar(100) unique,-- can be blank, blank triggers account creation
-    password varchar(100) unique,
+    password varchar(100),
     primary key(profId)
 );
 
