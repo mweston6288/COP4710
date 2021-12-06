@@ -282,3 +282,6 @@ function resetPassword(){
 	}
 
 }
+function logout() {
+	window.location.href = "/";
+  }
