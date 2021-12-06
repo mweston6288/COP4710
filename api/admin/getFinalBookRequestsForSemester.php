@@ -26,34 +26,7 @@
         badRequest();
     }
 
-    // Update the new semester.
-    $newSemester;
-    $newYear;
-    // If current semester is fall, next is spring of next year
-    if ($currentSemester === "Fall") 
-    {
-        $newSemester = "Spring";
-        $newYear = $currentYear+1;
-    }
-    // If current semester is spring, next is summer
-    else if ($currentSemester === "Spring")
-    {
-        $newSemester = "Summer";
-        $newYear = $currentYear;
-    }
-    // If current semester is summer, next is fall
-    else
-    {
-        $newSemester = "Fall";
-        $newYear = $currentYear;
-    }
     
-    $query = "UPDATE currentSemester SET semester = ?, year = ? WHERE semester = ? AND year = ?";
-    $preparedStatement = $conn->prepare($query);
-    $preparedStatement->bind_param("sisi", $newSemester, $newYear, $currentSemester, $currentYear);
-    $preparedStatement->execute();
-    $resultTable = $preparedStatement->get_result();
-
     // Get the list of requests for the current semester.
     $semesterString = $currentSemester . " " . strval($currentYear);
     $query = "SELECT p.profId, p.name, COUNT(*) AS bookAmount FROM request AS r JOIN professor AS p ON r.profId = p.profId WHERE r.semester = ? GROUP BY p.profId, p.name";
@@ -61,8 +34,36 @@
     $preparedStatement->bind_param("s", $semesterString);
     $preparedStatement->execute();
     $resultTable = $preparedStatement->get_result();
+    if($resultTable->num_rows >0){
 
-    // Iterate through all the requests and append to a nested associative array.
+        // Update the new semester.
+        $newSemester;
+        $newYear;
+        // If current semester is fall, next is spring of next year
+        if ($currentSemester === "Fall") 
+        {
+            $newSemester = "Spring";
+            $newYear = $currentYear+1;
+        }
+        // If current semester is spring, next is summer
+        else if ($currentSemester === "Spring")
+        {
+            $newSemester = "Summer";
+            $newYear = $currentYear;
+        }
+        // If current semester is summer, next is fall
+        else
+        {
+            $newSemester = "Fall";
+            $newYear = $currentYear;
+        }
+        
+        $query = "UPDATE currentSemester SET semester = ?, year = ?";
+        $preparedStatement = $conn->prepare($query);
+        $preparedStatement->bind_param("si", $newSemester, $newYear);
+        $preparedStatement->execute();
+    }    
+        // Iterate through all the requests and append to a nested associative array.
     $requests = array();
     for ($i = 0; $i < $resultTable->num_rows; $i++)
     {
