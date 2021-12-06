@@ -4,12 +4,22 @@ var professorsBase = "professor/";
 var extension = ".php";
 var modal; // declare modal to be used anywhere in file.
 
+var professorButtons = document.getElementById("professorButtons");
+var adminButtons = document.getElementById("adminButtons");
+var requestButtons = document.getElementById("requestButtons");
+
+// ---------- Professor Stuff ----------
 document.getElementById('getProfessors').onclick = function(){
   getProfessors()
 };
 
 // Populates professors table on admin page.
 function getProfessors(){
+  // Set styling
+  professorButtons.style.display = "inline";
+  adminButtons.style.display = "none";
+  requestButtons.style.display="none";
+
   console.log("Getting Professors..");
   // Establish endpoint url we will call.
   var url = urlBase + adminBase + "getAllProfessors" + extension;
@@ -40,7 +50,7 @@ function getProfessors(){
 				}
         
         // Generate Table
-        generateTableHead(table);
+        generateTableHead(table, "professor");
         response.professors.forEach(element => {
           let row = table.insertRow(); // Create Row
           let cell = row.insertCell(); // Create first cell
@@ -115,20 +125,7 @@ function deleteProfessor(id) {
   }
 }
 
-function generateTableHead(table, admin) {
-	let thead = table.createTHead();
-	let row = thead.insertRow();
-	let data = (admin) ? ["ID","Username","Password"] : ["ID", "Name", "Email"];
-	for (let i = 0; i < data.length; i++) {
-		let th = document.createElement("th");
-		let text = document.createTextNode(data[i]);
-		th.appendChild(text);
-		row.appendChild(th);
-	}
-}
-
 // Add Professor Form
-
 document.getElementById("submitProf").addEventListener("click", function(event){
   event.preventDefault();
   addProfessor();
@@ -171,14 +168,52 @@ function addProfessor() {
 
 }
 
+// Push Reminder
+function addReminder(){
+  // Establish endpoint url we will call.
+  var url = urlBase + adminBase + "emailProfessorsOrderDeadline" + extension;
+  var date = document.getElementById("date").value;
+  console.log(date);
+  // Start request
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  var payload = `{"deadlineDate": "${date}"}`
+  try{
 
-// --------------- Admin stuff
+    // Establish state changes for html request.
+    xhr.onreadystatechange = function(){
+      // All went well.
+      if(this.readyState == 4 && this.status == 200){
+
+        alert("Reminder sent");
+  
+      }else if(xhr.readyState == 4 && xhr.status == 500){ // Something is wrong
+        console.log("An error has occured");
+      }
+    }
+
+    // Send Request
+    xhr.send(payload);
+  }catch(err){
+    console.log(err.message);
+  }
+}
+
+
+// --------------- Admin stuff ---------------
 function getAdmins(){
+  // Set styling
+  professorButtons.style.display = "none";
+  adminButtons.style.display = "inline";
+  requestButtons.style.display = "none";
+  
   console.log("Getting Professors..");
   // Establish endpoint url we will call.
   var url = urlBase + adminBase + "getAllAdmins" + extension;
 
   console.log(url);
+
   // Start request
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
@@ -204,7 +239,7 @@ function getAdmins(){
 				}
         
         // Generate Table
-        generateTableHead(table);
+        generateTableHead(table, "admin");
         response.admins.forEach(element => {
           let row = table.insertRow(); // Create Row
           let cell = row.insertCell(); // Create first cell
@@ -244,6 +279,7 @@ function getAdmins(){
   }
 }
 
+// Delete Admin
 function deleteAdmin(id) {
   console.log(id);
 
@@ -285,7 +321,8 @@ document.getElementById("submitAdmin").addEventListener("click", function(event)
   addAdmin();
 })
 
-function addAdmin() {
+// Add Admin
+function addAdmin() {  
   var form = Array
     .from(document.querySelectorAll('#addAdminForm input'))
     .reduce((acc, input) => ({ ...acc, [input.id]: input.value}), {});
@@ -326,43 +363,229 @@ document.getElementById("submitReminder").addEventListener("click", function(eve
   addReminder();
 })
 
-function addReminder(){
-  // Establish endpoint url we will call.
-  var url = urlBase + adminBase + "emailProfessorsOrderDeadline" + extension;
-  var date = document.getElementById("date").value;
-  console.log(date);
-  // Start request
+// --------------- Request stuff ---------------
+var select = document.getElementById("selectSemester");
+select.addEventListener("change", function(event){
+  event.preventDefault();
+  getAllBookRequests(select.value);
+})
+
+function loadBookRequests() {
+  // Set styling
+  professorButtons.style.display = "none";
+  adminButtons.style.display = "none";
+  requestButtons.style.display = "inline";
+
+  var select = document.getElementById("selectSemester");
+
+  var url = urlBase + adminBase + "getAllExistingSemesters" + extension;
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
+  xhr.open("GET", url, true);
   xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-  var payload = `{"deadlineDate": "${date}"}`
+
   try{
-
-    // Establish state changes for html request.
-    xhr.onreadystatechange = function(){
-      // All went well.
+    xhr.onreadystatechange = function() {
       if(this.readyState == 4 && this.status == 200){
+        var response = JSON.parse(this.responseText);
 
-        alert("Reminder sent");
-  
-      }else if(xhr.readyState == 4 && xhr.status == 500){ // Something is wrong
-        console.log("An error has occured");
+        response.semesters.forEach((element) => {
+          var option = document.createElement("option");
+          option.value = element;
+          option.text = element;
+
+          select.add(option);
+        })
       }
     }
 
-    // Send Request
-    xhr.send(payload);
-  }catch(err){
-    console.log(err.message);
+    xhr.send(null);
+  }catch(e){
+    console.log(e.message);
   }
 }
 
-// Modal STUFF
-var span = document.getElementsByClassName("close")[0];
-span.onclick = function() {
-  closeModal();
+function getAllBookRequests() {
+  var semester = document.getElementById("selectSemester").value;
+
+  var payload = JSON.stringify({semester});
+
+  var url = urlBase + adminBase + "getAllBookRequestsForSemester" + extension;
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try{
+    xhr.onreadystatechange = function() {
+      if(this.readyState == 4 && this.status == 200){
+        var response = JSON.parse(this.responseText);
+
+        // Generate table with response.
+        var table = document.getElementById("table");
+        // Clear table
+        var rowCount = table.rows.length;
+				for(var i = 0; i < rowCount; i++)
+				{
+					table.deleteRow(0);
+				}
+        
+        // Generate Table
+        generateTableHead(table, "request");
+        response.requests.forEach(element => {
+          let row = table.insertRow(); // Create Row
+          let cell = row.insertCell(); // Create first cell
+          let text = document.createTextNode(element.name); // Assign name
+          cell.appendChild(text); // ADD name
+
+          // Add professorID
+          cell = row.insertCell();
+          text = document.createTextNode(element.profId);
+          cell.appendChild(text);
+
+          // Add number of books
+          cell = row.insertCell();
+          text = document.createTextNode(element.bookAmount);
+          cell.appendChild(text);
+
+          cell = row.insertCell();
+          text = document.createElement("input");
+          text.type = "button";
+          text.value = "View";
+          text.onclick = function(){
+            loadBooks(element.profId);
+          };
+          cell.appendChild(text);
+        });
+      }
+    }
+
+    xhr.send(payload);
+  }catch(e){
+    console.log(e.message);
+  }
 }
 
+function getFinalRequests() {
+  var semester = "Fall 2021";
+  var payload = JSON.stringify({semester});
+
+  var url = urlBase + adminBase + "getFinalBookRequestsForSemester" + extension;
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try{
+    xhr.onreadystatechange = function() {
+      if(this.readyState == 4 && this.status == 200){
+        var response = JSON.parse(this.responseText);
+
+        console.log(response);
+      }
+    }
+
+    xhr.send(null);
+  }catch(e){
+    console.log(e.message);
+  }
+
+}
+
+var id = -1;
+
+function loadBooks(profId){
+  if(profId == id) return;
+  
+  var semester = document.getElementById("selectSemester").value;
+
+  var payload = JSON.stringify({semester, profId});
+
+  var url = urlBase + professorsBase + "getBookRequestsForSemester" + extension;
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try{
+    xhr.onreadystatechange = function() {
+      if(this.readyState == 4 && this.status == 200){
+        var response = JSON.parse(this.responseText);
+
+        // Generate table with response.
+        var table = document.getElementById("books");
+        // Clear table
+        var rowCount = table.rows.length;
+				for(var i = 0; i < rowCount; i++)
+				{
+					table.deleteRow(0);
+				}
+        
+        // Generate Table
+        generateTableHead(table, "books");
+        response.books.forEach(element => {
+          let row = table.insertRow(); // Create Row
+          let cell = row.insertCell(); // Create first cell
+          let text = document.createTextNode(element.isbm); // Assign isbn
+          cell.appendChild(text); // ADD isbn
+
+          // Add professorID
+          cell = row.insertCell();
+          text = document.createTextNode(element.bookTitle);
+          cell.appendChild(text);
+
+          // Add number of books
+          cell = row.insertCell();
+          text = document.createTextNode(element.author);
+          cell.appendChild(text);
+
+          // Add number of books
+          cell = row.insertCell();
+          text = document.createTextNode(element.edition);
+          cell.appendChild(text);
+
+          // Add number of books
+          cell = row.insertCell();
+          text = document.createTextNode(element.publisher);
+          cell.appendChild(text);
+        });
+      }
+    }
+
+    xhr.send(payload);
+  }catch(e){
+    console.log(e.message);
+  }
+
+}
+
+
+// Table Generation
+function generateTableHead(table, name) {
+	let thead = table.createTHead();
+	let row = thead.insertRow();
+	let data;
+  
+  switch(name){
+    case 'admin':
+      data = ["ID","Username","Password"];
+      break;
+    case 'professor':
+      data = ["ID", "Name", "Email"];
+      break;
+    case 'request':
+      data = ["Professor", "ID", "Books"];
+      break;
+    case 'books':
+      data = ["ISBN", "Title", "Author", "Edition", "Publisher"];
+      break;
+  }
+
+	for (let i = 0; i < data.length; i++) {
+		let th = document.createElement("th");
+		let text = document.createTextNode(data[i]);
+		th.appendChild(text);
+		row.appendChild(th);
+	}
+}
+
+// Modal STUFF
 function closeModal(){
   modal.style.display = "none";
 

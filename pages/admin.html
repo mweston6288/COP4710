@@ -6,14 +6,31 @@
     <body>
         <div>
           <button id="getAdmins" onclick="getAdmins()">Get Admins</button>
-          <button id="addAdmin" onclick="openModal('addAdminModal')">Add Admin</button>
           <button id="getProfessors" onclick="getProfessors()">Get Professors</button>
+          <button id="getAllBookRequests" onclick="loadBookRequests()">Get Book Requests</button>
+        </div>
+
+        <div class="specific-buttons" id="professorButtons">
           <button id="addProfessors" onclick="openModal('addProfModal')">Add Professor</button>
           <button id="setReminder" onclick="openModal('setReminderModal')">Set Reminder</button>
         </div>
 
+        <div class="specific-buttons" id="adminButtons">
+          <button id="addAdmin" onclick="openModal('addAdminModal')">Add Admin</button>
+        </div>
+
+        <div class="specific-buttons" id="requestButtons">
+          <label for="selectSemester">Semester:</label>
+          <select id="selectSemester">
+          </select>
+          <button id="getFinalRequests" onclick="getFinalRequests()">Finalize Requests</button>
+        </div>
+
         <div>
           <table id="table">
+
+          </table>
+          <table id="books">
 
           </table>
         </div>
@@ -23,7 +40,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h2>Add A Professor</h2>
-              <span= class="close">&times;</span>
+              <span onclick="closeModal()" class="close">&times;</span>
             </div>
             <div class="modal-body">
               <form id="addProfForm">
@@ -41,7 +58,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h2>Add an Admin</h2>
-              <span= class="close">&times;</span>
+              <span onclick="closeModal()" class="close">&times;</span>
             </div>
             <div class="modal-body">
               <form id="addAdminForm">
@@ -59,7 +76,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h2>Set a reminder</h2>
-              <span= class="close">&times;</span>
+              <span onclick="closeModal()" class="close">&times;</span>
             </div>
             <div class="modal-body">
               <form id="reminderForm">
@@ -70,6 +87,7 @@
             </div>
           </div>
         </div>
+
         <script type="text/javascript" src="/pages/admin.js"></script>
     </body>
 </html>
