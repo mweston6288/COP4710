@@ -348,13 +348,14 @@ function addAdmin() {
         // Reset form
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
+        alert("Admin account created");
 
         // Close modal
         closeModal();
       }else if(this.readyState == 4 && this.status == 400){
 
         //TODO: Add error message to modal.
-        console.log("Admin already exists");
+        alert("Admin already exists");
       }
     }
 
