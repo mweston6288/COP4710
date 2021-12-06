@@ -13,8 +13,8 @@
   $request = $_SERVER['REQUEST_URI'];
   // regex for the signup page
   // signup url should look like:
-  // /signup?id=1&email=example@example.com
-  $regex = "/\/signup\?id=[0-9]+&email=[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/";
+  // /signup?id=1
+  $regex = "/\/signup\?profId=[0-9]+/";
   switch ($request) {
     case '/':
       require __DIR__ . '/pages/login.html';
@@ -31,7 +31,7 @@
         // check if professor already has an account by chgecking if username is null
         $query = "SELECT * FROM professor WHERE profId = ? AND username IS NULL;";
         $preparedStatement = $conn->prepare($query);
-        $preparedStatement->bind_param("i", $_GET['id']);
+        $preparedStatement->bind_param("i", $_GET['profId']);
         $preparedStatement->execute();
         $resultTable = $preparedStatement->get_result();
         // if found username is null, go to signup page

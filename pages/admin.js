@@ -153,13 +153,40 @@ function addProfessor() {
         // Reset form
         document.getElementById("name").value = "";
         document.getElementById("email").value = "";
-
+        sendInviteEmail()
         // Close modal
         closeModal();
       }else if(this.readyState == 4 && this.status == 400){
 
         //TODO: Add error message to modal.
         console.log("Professor already exists");
+      }
+    }
+
+    xhr.send(payload)
+  }catch(e){
+    console.log(e.message);
+  }
+
+}
+
+
+function sendInviteEmail(profId){
+  var payload = `{"profId" : "4"}`;
+
+  // Connection info
+  var url = urlBase + adminBase + "emailProfessorInvitation" + extension;
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try{
+    xhr.onreadystatechange = function () {
+
+      if(this.readyState == 4 && this.status == 400){
+
+        //TODO: Add error message to modal.
+        alert("An error occurred when sending an invite");
       }
     }
 
@@ -349,7 +376,6 @@ function addAdmin() {
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
         alert("Admin account created");
-
         // Close modal
         closeModal();
       }else if(this.readyState == 4 && this.status == 400){
@@ -365,6 +391,8 @@ function addAdmin() {
   }
 
 }
+
+
 
 document.getElementById("changePassword").addEventListener("click", function(event){
   event.preventDefault();

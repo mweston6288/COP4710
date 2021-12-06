@@ -23,7 +23,7 @@ function attemptRegister(){
 	// profId is in the url param field
 	const params = new URLSearchParams(window.location.search);
     // Prepare the values for HTTP request in JSON.
-    var payload = `{"username" : "${user}", "password" : "${password}", "id" : "${params.get("id")}"}`;
+    var payload = `{"username" : "${user}", "password" : "${password}", "id" : "${params.get("profId")}"}`;
     var xhr = new XMLHttpRequest();
     // Create JSON HTTP Request destination.
     try{

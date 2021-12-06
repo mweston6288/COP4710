@@ -24,7 +24,7 @@
         $row = $resultTable->fetch_assoc();
         $email = $row['email'];
         $name = $row['name'];
-        $hasAccount = trim($row['username']) !== "";
+        $hasAccount = $row['username'] != null;
         $professor = array(
             'email' => $email,
             'name' => $name
@@ -42,7 +42,7 @@
     $urlQuery = array(
         'profId' => $profId
     );
-    $invitationURL = $hasAccount ? "http://localhost/pages/login.html?".http_build_query($urlQuery) : "http://localhost/pages/signup.html?".http_build_query($urlQuery);
+    $invitationURL = $hasAccount ? "http://localhost:8000" : "http://localhost:8000/signup?".http_build_query($urlQuery);
     $loginOrSignUp = $hasAccount ? "login" : "signup";
     $emailSubject = "Invitation to request book information.";
     $emailContent = <<<_END
