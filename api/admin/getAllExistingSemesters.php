@@ -14,24 +14,30 @@
 
     // Iterate through all the semesters and append to a nested associative array.
     $semesters = array();
-    for ($i = 0; $i < $resultTable->num_rows; $i++)
-    {
-        $row = $resultTable->fetch_assoc();
-        $semester = $row['semester'];
+    if($resultTable->num_rows > 0){
 
-        array_push($semesters, $semester);
+        for ($i = 0; $i < $resultTable->num_rows; $i++)
+        {
+            $row = $resultTable->fetch_assoc();
+            $semester = $row['semester'];
+            
+            array_push($semesters, $semester);
+        }
+        
+        // Store the results in an associative array to convert to JSON.
+        $data = array(
+            'semesters' => $semesters,
+            'count' => count($semesters)
+        );
+        
+        // Return status code 200 and JSON of the admins.
+        ok();
+        header("Content-Type: application/json");
+        httpResponse($data);
     }
-
-    // Store the results in an associative array to convert to JSON.
-    $data = array(
-        'semesters' => $semesters,
-        'count' => count($semesters)
-    );
-
-    // Return status code 200 and JSON of the admins.
-    ok();
-    header("Content-Type: application/json");
-    httpResponse($data);
+    else{
+        badRequest();
+    }
     
     // Close the database at end of script
     $preparedStatement->close();

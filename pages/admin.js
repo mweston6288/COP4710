@@ -463,9 +463,7 @@ select.addEventListener("change", function(event){
 
 function loadBookRequests() {
   // Set styling
-  professorButtons.style.display = "none";
-  adminButtons.style.display = "none";
-  requestButtons.style.display = "inline";
+
 
   var url = urlBase + adminBase + "getAllExistingSemesters" + extension;
   var xhr = new XMLHttpRequest();
@@ -475,6 +473,9 @@ function loadBookRequests() {
   try{
     xhr.onreadystatechange = function() {
       if(this.readyState == 4 && this.status == 200){
+        professorButtons.style.display = "none";
+        adminButtons.style.display = "none";
+        requestButtons.style.display = "inline";
         var response = JSON.parse(this.responseText);
 
         getAllBookRequests(response.semesters[0]);
@@ -491,6 +492,9 @@ function loadBookRequests() {
 
           select.add(option);
         })
+      }
+      else if (this.readyState == 4 && this.status == 400){
+        alert("No reuqests available");
       }
     }
 
