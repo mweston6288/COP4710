@@ -262,7 +262,7 @@ function resetPassword(){
 			if (this.readyState == 4 && this.status == 204) 
 			{
 				// hide reset Password field and alert user of success
-				document.getElementById("resetPassword").hidden = false;
+				document.getElementById("resetPassword").hidden = true;
                 alert("Password was changed")
 
 			}
