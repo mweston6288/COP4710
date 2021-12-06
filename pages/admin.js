@@ -15,6 +15,10 @@ document.getElementById('getProfessors').onclick = function(){
   getProfessors()
 };
 
+function logout() {
+  window.location.href = "/";
+}
+
 // Populates professors table on admin page.
 function getProfessors(){
   // Set styling
@@ -159,6 +163,7 @@ function addProfessor() {
         sendInviteEmail(jsonObject.createdId);
         // Close modal
         closeModal();
+        getProfessors();
       }else if(this.readyState == 4 && this.status == 400){
 
         //TODO: Add error message to modal.
@@ -382,6 +387,7 @@ function addAdmin() {
         alert("Admin account created");
         // Close modal
         closeModal();
+        getAdmins();
       }else if(this.readyState == 4 && this.status == 400){
 
         //TODO: Add error message to modal.
