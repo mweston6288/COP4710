@@ -6,7 +6,9 @@ var modal; // declare modal to be used anywhere in file.
 
 var professorButtons = document.getElementById("professorButtons");
 var adminButtons = document.getElementById("adminButtons");
+var requestButtons = document.getElementById("requestButtons");
 
+// ---------- Professor Stuff ----------
 document.getElementById('getProfessors').onclick = function(){
   getProfessors()
 };
@@ -16,6 +18,7 @@ function getProfessors(){
   // Set styling
   professorButtons.style.display = "inline";
   adminButtons.style.display = "none";
+  requestButtons.style.display="none";
 
   console.log("Getting Professors..");
   // Establish endpoint url we will call.
@@ -122,20 +125,7 @@ function deleteProfessor(id) {
   }
 }
 
-function generateTableHead(table, admin) {
-	let thead = table.createTHead();
-	let row = thead.insertRow();
-	let data = (admin) ? ["ID","Username","Password"] : ["ID", "Name", "Email"];
-	for (let i = 0; i < data.length; i++) {
-		let th = document.createElement("th");
-		let text = document.createTextNode(data[i]);
-		th.appendChild(text);
-		row.appendChild(th);
-	}
-}
-
 // Add Professor Form
-
 document.getElementById("submitProf").addEventListener("click", function(event){
   event.preventDefault();
   addProfessor();
@@ -178,12 +168,45 @@ function addProfessor() {
 
 }
 
+// Push Reminder
+function addReminder(){
+  // Establish endpoint url we will call.
+  var url = urlBase + adminBase + "emailProfessorsOrderDeadline" + extension;
+  var date = document.getElementById("date").value;
+  console.log(date);
+  // Start request
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  var payload = `{"deadlineDate": "${date}"}`
+  try{
 
-// --------------- Admin stuff
+    // Establish state changes for html request.
+    xhr.onreadystatechange = function(){
+      // All went well.
+      if(this.readyState == 4 && this.status == 200){
+
+        alert("Reminder sent");
+  
+      }else if(xhr.readyState == 4 && xhr.status == 500){ // Something is wrong
+        console.log("An error has occured");
+      }
+    }
+
+    // Send Request
+    xhr.send(payload);
+  }catch(err){
+    console.log(err.message);
+  }
+}
+
+
+// --------------- Admin stuff ---------------
 function getAdmins(){
   // Set styling
   professorButtons.style.display = "none";
   adminButtons.style.display = "inline";
+  requestButtons.style.display = "none";
   
   console.log("Getting Professors..");
   // Establish endpoint url we will call.
@@ -256,6 +279,7 @@ function getAdmins(){
   }
 }
 
+// Delete Admin
 function deleteAdmin(id) {
   console.log(id);
 
@@ -297,7 +321,8 @@ document.getElementById("submitAdmin").addEventListener("click", function(event)
   addAdmin();
 })
 
-function addAdmin() {
+// Add Admin
+function addAdmin() {  
   var form = Array
     .from(document.querySelectorAll('#addAdminForm input'))
     .reduce((acc, input) => ({ ...acc, [input.id]: input.value}), {});
@@ -338,43 +363,77 @@ document.getElementById("submitReminder").addEventListener("click", function(eve
   addReminder();
 })
 
-function addReminder(){
-  // Establish endpoint url we will call.
-  var url = urlBase + adminBase + "emailProfessorsOrderDeadline" + extension;
-  var date = document.getElementById("date").value;
-  console.log(date);
-  // Start request
+// --------------- Request stuff ---------------
+function getAllBookRequests() {
+  // Set styling
+  professorButtons.style.display = "none";
+  adminButtons.style.display = "none";
+  requestButtons.style.display = "inline";
+
+  var semester = "Fall 2021";
+  var payload = JSON.stringify({semester});
+
+  var url = urlBase + adminBase + "getAllBookRequestsForSemester" + extension;
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-  var payload = `{"deadlineDate": "${date}"}`
+
   try{
-
-    // Establish state changes for html request.
-    xhr.onreadystatechange = function(){
-      // All went well.
+    xhr.onreadystatechange = function() {
       if(this.readyState == 4 && this.status == 200){
+        var response = JSON.parse(this.responseText);
 
-        alert("Reminder sent");
-  
-      }else if(xhr.readyState == 4 && xhr.status == 500){ // Something is wrong
-        console.log("An error has occured");
+        console.log(response);
       }
     }
 
-    // Send Request
     xhr.send(payload);
-  }catch(err){
-    console.log(err.message);
+  }catch(e){
+    console.log(e.message);
   }
+
+}
+
+function getFinalRequests() {
+  var semester = "Fall 2021";
+  var payload = JSON.stringify({semester});
+
+  var url = urlBase + adminBase + "getFinalBookRequestsForSemester" + extension;
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try{
+    xhr.onreadystatechange = function() {
+      if(this.readyState == 4 && this.status == 200){
+        var response = JSON.parse(this.responseText);
+
+        console.log(response);
+      }
+    }
+
+    xhr.send(null);
+  }catch(e){
+    console.log(e.message);
+  }
+
+}
+
+
+// Table Generation
+function generateTableHead(table, admin) {
+	let thead = table.createTHead();
+	let row = thead.insertRow();
+	let data = (admin) ? ["ID","Username","Password"] : ["ID", "Name", "Email"];
+	for (let i = 0; i < data.length; i++) {
+		let th = document.createElement("th");
+		let text = document.createTextNode(data[i]);
+		th.appendChild(text);
+		row.appendChild(th);
+	}
 }
 
 // Modal STUFF
-var span = document.getElementsByClassName("close")[0];
-span.onclick = function() {
-  closeModal();
-}
-
 function closeModal(){
   modal.style.display = "none";
 

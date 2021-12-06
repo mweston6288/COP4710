@@ -7,6 +7,7 @@
         <div>
           <button id="getAdmins" onclick="getAdmins()">Get Admins</button>
           <button id="getProfessors" onclick="getProfessors()">Get Professors</button>
+          <button id="getAllBookRequests" onclick="getAllBookRequests()">Get Book Requests</button>
         </div>
 
         <div class="specific-buttons" id="professorButtons">
@@ -16,6 +17,10 @@
 
         <div class="specific-buttons" id="adminButtons">
           <button id="addAdmin" onclick="openModal('addAdminModal')">Add Admin</button>
+        </div>
+
+        <div class="specific-buttons" id="requestButtons">
+          <button id="getFinalRequests" onclick="getFinalRequests()">Finalize Requests</button>
         </div>
 
         <div>
@@ -29,7 +34,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h2>Add A Professor</h2>
-              <span= class="close">&times;</span>
+              <span onclick="closeModal()" class="close">&times;</span>
             </div>
             <div class="modal-body">
               <form id="addProfForm">
@@ -47,7 +52,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h2>Add an Admin</h2>
-              <span= class="close">&times;</span>
+              <span onclick="closeModal()" class="close">&times;</span>
             </div>
             <div class="modal-body">
               <form id="addAdminForm">
@@ -65,7 +70,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h2>Set a reminder</h2>
-              <span= class="close">&times;</span>
+              <span onclick="closeModal()" class="close">&times;</span>
             </div>
             <div class="modal-body">
               <form id="reminderForm">
@@ -76,7 +81,7 @@
             </div>
           </div>
         </div>
-        <script type="text/javascript" src="/pages/adminREquests.js"></script>
+
         <script type="text/javascript" src="/pages/admin.js"></script>
     </body>
 </html>
