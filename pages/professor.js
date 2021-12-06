@@ -226,3 +226,58 @@ function submit (){
 		getRequests();
 	  })
 }
+function showPasswordReset(){
+	document.getElementById("resetPassword").hidden = false;
+}
+function resetPassword(){
+	var newPassword = document.getElementById("newPassword").value;
+	var rePassword = document.getElementById("Repassword").value
+	if(newPassword !== rePassword){
+		alert("password fields are not the same");
+		return;
+	}
+
+	var url = 'http://localhost:8000/api/professor/changeProfessorPassword.php';
+	var profId = getCookie();
+    // Prepare the values for HTTP request in JSON.
+    var payload = `{"profId" : "${profId}", "newPassword":"${newPassword}"}`;
+    var xhr = new XMLHttpRequest();
+    // Create JSON HTTP Request destination.
+    try{
+
+		xhr.open("PUT", url, true);
+	}catch (e){
+		console.error(e);
+	}
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	
+    try
+	{
+		// This event fires anytime the readstate changes (opening HTTP Request, sending HTTP Request, etc).
+		xhr.onreadystatechange = function() 
+		{
+
+			// If the ready state so happens to be 4 (4 = request finished, response is ready), 
+            // and the status code of the HTTP Response for this Request is 200 OK.
+			if (this.readyState == 4 && this.status == 200) 
+			{
+                // remove the parent and all children it had
+                alert("Password was changed")
+
+			}
+            // If the response header is 400 Bad Request, signal user doesn't exist.
+            else if (this.readyState == 4 && this.status == 400)
+            {
+
+                alert("An error has occurred!");
+
+            }
+		};
+		xhr.send(payload);
+	}
+	catch (err)
+	{
+		alert(err.message);
+	}
+
+}
