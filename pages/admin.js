@@ -8,6 +8,7 @@ var professorButtons = document.getElementById("professorButtons");
 var adminButtons = document.getElementById("adminButtons");
 var requestButtons = document.getElementById("requestButtons");
 var booksTable = document.getElementById("books");
+var header = document.getElementById("tableHeading");
 
 // ---------- Professor Stuff ----------
 document.getElementById('getProfessors').onclick = function(){
@@ -17,6 +18,7 @@ document.getElementById('getProfessors').onclick = function(){
 // Populates professors table on admin page.
 function getProfessors(){
   // Set styling
+  header.innerText = "Professors";
   books.style.display = "none";
   professorButtons.style.display = "inline";
   adminButtons.style.display = "none";
@@ -234,6 +236,7 @@ function addReminder(){
 // --------------- Admin stuff ---------------
 function getAdmins(){
   // Set styling
+  header.innerText = "Admins";
   books.style.display = "none";
   professorButtons.style.display = "none";
   adminButtons.style.display = "inline";
@@ -262,7 +265,7 @@ function getAdmins(){
 
         // Generate table with response.
         var table = document.getElementById("table");
-        var uid = getCookie("id");
+        var uid = getCookie();
 
         // Clear table
         var rowCount = table.rows.length;
@@ -458,8 +461,6 @@ function loadBookRequests() {
   adminButtons.style.display = "none";
   requestButtons.style.display = "inline";
 
-  var select = document.getElementById("selectSemester");
-
   var url = urlBase + adminBase + "getAllExistingSemesters" + extension;
   var xhr = new XMLHttpRequest();
   xhr.open("GET", url, true);
@@ -494,6 +495,7 @@ function loadBookRequests() {
 }
 
 function getAllBookRequests(semester) {
+  header.innerText = "Book Requests for " + semester;
   semester = (semester) ? semester : document.getElementById("selectSemester").value;
 
   var payload = JSON.stringify({semester});
@@ -540,7 +542,7 @@ function getAllBookRequests(semester) {
           text.type = "button";
           text.value = "View";
           text.onclick = function(){
-            loadBooks(element.profId);
+            loadBooks(element.profId, "books");
           };
           cell.appendChild(text);
         });
@@ -572,6 +574,8 @@ function getFinalRequests() {
 				{
 					table.deleteRow(0);
 				}
+
+        header.innerText = "Final Requests for " + response.requests[0].semester;
         
         // Generate Table
         generateTableHead(table, "request");
@@ -591,14 +595,16 @@ function getFinalRequests() {
           text = document.createTextNode(element.bookAmount);
           cell.appendChild(text);
 
+          row = table.insertRow();
+          cell = row.insertCell()
           cell = row.insertCell();
-          text = document.createElement("input");
-          text.type = "button";
-          text.value = "View";
-          text.onclick = function(){
-            loadBooks(element.profId);
-          };
+          cell = row.insertCell();
+          text = document.createElement("table");
+          text.id = element.profId + "books";
           cell.appendChild(text);
+
+          loadBooks(element.profId, text.id);
+
         });
       }
     }
@@ -612,7 +618,7 @@ function getFinalRequests() {
 
 var id = -1;
 
-function loadBooks(profId){
+function loadBooks(profId, tableName){
   books.style.display = "inline";
   if(profId == id) return;
   
@@ -631,7 +637,7 @@ function loadBooks(profId){
         var response = JSON.parse(this.responseText);
 
         // Generate table with response.
-        var table = document.getElementById("books");
+        var table = document.getElementById(tableName);
         // Clear table
         var rowCount = table.rows.length;
 				for(var i = 0; i < rowCount; i++)
