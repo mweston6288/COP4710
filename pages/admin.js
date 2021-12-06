@@ -522,7 +522,7 @@ function loadBooks(profId){
         response.books.forEach(element => {
           let row = table.insertRow(); // Create Row
           let cell = row.insertCell(); // Create first cell
-          let text = document.createTextNode(element.isbm); // Assign isbn
+          let text = document.createTextNode(element.ISBN); // Assign isbn
           cell.appendChild(text); // ADD isbn
 
           // Add professorID
