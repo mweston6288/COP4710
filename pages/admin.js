@@ -495,6 +495,8 @@ function loadBookRequests() {
 }
 
 function getAllBookRequests(semester) {
+  books.style.display = "none";
+
   header.innerText = "Book Requests for " + semester;
   semester = (semester) ? semester : document.getElementById("selectSemester").value;
 
@@ -556,6 +558,8 @@ function getAllBookRequests(semester) {
 }
 
 function getFinalRequests() {
+  books.style.display = "none";
+
   var url = urlBase + adminBase + "getFinalBookRequestsForSemester" + extension;
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
@@ -574,6 +578,12 @@ function getFinalRequests() {
 				{
 					table.deleteRow(0);
 				}
+
+        console.log(response);
+        if(response.count == 0){
+          header.innerText = "No Requests to finalize."
+          return;
+        }
 
         header.innerText = "Final Requests for " + response.requests[0].semester;
         
@@ -596,10 +606,11 @@ function getFinalRequests() {
           cell.appendChild(text);
 
           row = table.insertRow();
-          cell = row.insertCell()
           cell = row.insertCell();
           cell = row.insertCell();
+          cell.colSpan = "2";
           text = document.createElement("table");
+          cell.style.textAlign = "center";
           text.id = element.profId + "books";
           cell.appendChild(text);
 
