@@ -640,7 +640,7 @@ function getFinalRequests() {
 var id = -1;
 
 function loadBooks(profId, tableName){
-  books.style.display = "inline";
+  books.style.display = (tableName == "books") ? "inline" : "none";
   if(profId == id) return;
   
   var semester = document.getElementById("selectSemester").value;

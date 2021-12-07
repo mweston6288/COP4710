@@ -29,7 +29,7 @@
       // check if the request matches the signup regex
       if(preg_match($regex, $request)){
         // check if professor already has an account by chgecking if username is null
-        $query = "SELECT * FROM professor WHERE profId = ? AND username IS NULL;";
+        $query = "SELECT * FROM professor WHERE profId = ? AND username='';";
         $preparedStatement = $conn->prepare($query);
         $preparedStatement->bind_param("i", $_GET['profId']);
         $preparedStatement->execute();
