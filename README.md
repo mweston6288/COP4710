@@ -1,5 +1,12 @@
 # COP4710
 # Setup
+## Insert default database
+This application requires mysql
+In a terminal, type the following command:
+```
+mysql -u <Your username> -p < path/to/this/folder/tables.sql
+```
+
 ## dbLoginData
 This application requires a file called dbLogiData.php.
 In api/utility, make the file and insert the following code:
