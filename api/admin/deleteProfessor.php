@@ -9,7 +9,11 @@
     // Retrieve the data from the HTTP Request body.
     $data = httpRequest();
     $professorID = $data['professorID'];
-            
+    
+    $query = "DELETE FROM request WHERE profId = ?";
+    $preparedStatement = $conn->prepare($query);
+    $preparedStatement->bind_param("i", $professorID);
+    $preparedStatement->execute();
     // Delete the professor with the selected id.
     $query = "DELETE FROM professor WHERE profId = ?";
     $preparedStatement = $conn->prepare($query);
